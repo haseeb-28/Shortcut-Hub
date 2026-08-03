@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Style definition for category badges, dots and chips.
+ * Style definition for category badges, chips, charts and cards.
  */
 export interface CategoryStyle {
   accent: string;
@@ -14,8 +14,8 @@ export interface CategoryStyle {
 }
 
 /**
- * Built-in category styles.
- * Custom categories automatically use the "Other" style.
+ * Built-in category colors.
+ * Any user-created category automatically falls back to "Other".
  */
 export const CATEGORY_STYLE: Record<string, CategoryStyle> = {
   AI: {
@@ -80,25 +80,37 @@ export const CATEGORY_STYLE: Record<string, CategoryStyle> = {
 };
 
 /**
- * Returns the correct style for any category.
- * Unknown categories automatically inherit the "Other" style.
+ * Fallback style used by custom categories.
  */
-export function getCategoryStyle(category: string): CategoryStyle {
-  return CATEGORY_STYLE[category] ?? CATEGORY_STYLE.Other;
-}
+const DEFAULT_CATEGORY_STYLE = CATEGORY_STYLE.Other;
 
 /**
- * Convenience helpers.
+ * Returns the correct style for any category.
  */
-export function getCategoryAccent(category: string): string {
+export function getCategoryStyle(
+  category: string
+): CategoryStyle {
+  return (
+    CATEGORY_STYLE[category] ??
+    DEFAULT_CATEGORY_STYLE
+  );
+}
+
+export function getCategoryAccent(
+  category: string
+): string {
   return getCategoryStyle(category).accent;
 }
 
-export function getCategoryBackground(category: string): string {
+export function getCategoryBackground(
+  category: string
+): string {
   return getCategoryStyle(category).bg;
 }
 
-export function getCategoryText(category: string): string {
+export function getCategoryText(
+  category: string
+): string {
   return getCategoryStyle(category).text;
 }
 
@@ -111,16 +123,16 @@ export function faviconFor(url: string): string {
       ? url
       : `https://${url}`;
 
-    const parsed = new URL(normalized);
-
-    return `https://www.google.com/s2/favicons?sz=64&domain=${parsed.hostname}`;
+    return `https://www.google.com/s2/favicons?sz=64&domain=${
+      new URL(normalized).hostname
+    }`;
   } catch {
     return "";
   }
 }
 
 /**
- * Human readable relative time.
+ * Converts an ISO date into a human-readable relative time.
  */
 export function timeAgo(iso: string): string {
   const then = new Date(iso).getTime();
@@ -134,7 +146,6 @@ export function timeAgo(iso: string): string {
   const minutes = Math.floor(diffMs / 60000);
 
   if (minutes < 1) return "just now";
-
   if (minutes < 60) return `${minutes}m ago`;
 
   const hours = Math.floor(minutes / 60);
