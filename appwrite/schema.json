@@ -1,0 +1,41 @@
+{
+  "_comment": "Reference only — Appwrite Cloud has no bulk schema-import UI the way PocketBase did, so this collection is created by hand in the console. Follow README.md §6 step by step; this file just documents the exact values to enter at each step, and is also what appwrite/seed-import.mjs reads when generating documents.",
+
+  "database": {
+    "name": "shortcut_hub_db"
+  },
+
+  "collection": {
+    "name": "shortcuts",
+    "documentSecurity": true,
+    "collectionPermissions": [
+      "create(\"users\")"
+    ],
+    "attributes": [
+      { "key": "name", "type": "string", "size": 100, "required": true },
+      { "key": "url", "type": "url", "required": true },
+      {
+        "key": "category",
+        "type": "enum",
+        "elements": [
+          "Email",
+          "Social Media",
+          "Entertainment",
+          "Development",
+          "AI",
+          "Education",
+          "Career",
+          "Jobs",
+          "Freelancing",
+          "Other"
+        ],
+        "required": true
+      },
+      { "key": "owner", "type": "string", "size": 36, "required": true }
+    ],
+    "indexes": [
+      { "key": "owner_idx", "type": "key", "attributes": ["owner"] },
+      { "key": "category_idx", "type": "key", "attributes": ["category"] }
+    ]
+  }
+}

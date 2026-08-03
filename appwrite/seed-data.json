@@ -1,0 +1,222 @@
+[
+  {
+    "name": "Youtube",
+    "url": "https://youtube.com",
+    "category": "Entertainment"
+  },
+  {
+    "name": "Gmail",
+    "url": "https://mail.google.com",
+    "category": "Email"
+  },
+  {
+    "name": "WhatsApp",
+    "url": "https://web.whatsapp.com",
+    "category": "Social Media"
+  },
+  {
+    "name": "Github",
+    "url": "https://github.com/haseeb-28",
+    "category": "Development"
+  },
+  {
+    "name": "Google Ai Studio",
+    "url": "https://aistudio.google.com/apps?_gl=1*uhtndz*_up*MQ..&gclid=CjwKCAjw-8vPBhBbEiwAoA39Ws38pem2_wcESYVttHv2RkPQCYDd7Bbhh7694Hy6paJqn4Gp4IHGqBoCldQQAvD_BwE&gbraid=0AAAAACn9t66S9y-G4kLw-UiM2cpfXPmlP",
+    "category": "AI"
+  },
+  {
+    "name": "BUIC",
+    "url": "https://cms.bahria.edu.pk/Logins/Alumni/Login.aspx",
+    "category": "Education"
+  },
+  {
+    "name": "Linkedin",
+    "url": "https://www.linkedin.com/feed/",
+    "category": "Career"
+  },
+  {
+    "name": "Prompt Cowboy",
+    "url": "https://www.promptcowboy.ai/",
+    "category": "AI"
+  },
+  {
+    "name": "Indeed",
+    "url": "https://pk.indeed.com/?from=gnav-homepage",
+    "category": "Jobs"
+  },
+  {
+    "name": "Overleaf",
+    "url": "https://www.overleaf.com/project",
+    "category": "Development"
+  },
+  {
+    "name": "fiverr",
+    "url": "https://www.fiverr.com/seller_dashboard",
+    "category": "Freelancing"
+  },
+  {
+    "name": "TypingClub",
+    "url": "https://www.typingclub.com/",
+    "category": "Education"
+  },
+  {
+    "name": "Portfolio",
+    "url": "https://haseeb-28.github.io/",
+    "category": "Career"
+  },
+  {
+    "name": "Rozee.pk",
+    "url": "https://www.rozee.pk/",
+    "category": "Jobs"
+  },
+  {
+    "name": "GPT Free",
+    "url": "https://chatgptfree.ai/chat/#google_vignette",
+    "category": "AI"
+  },
+  {
+    "name": "Careerjoin",
+    "url": "https://www.careerjoin.com/",
+    "category": "Jobs"
+  },
+  {
+    "name": "Supabase",
+    "url": "https://supabase.com/dashboard/organizations",
+    "category": "Development"
+  },
+  {
+    "name": "SME careers",
+    "url": "https://sme.careers/my-interviews",
+    "category": "Jobs"
+  },
+  {
+    "name": "Final Round Ai",
+    "url": "https://www.finalroundai.com/qa-pairs?from=started",
+    "category": "AI"
+  },
+  {
+    "name": "internshala",
+    "url": "https://internshala.com/student/dashboard",
+    "category": "Jobs"
+  },
+  {
+    "name": "Tamasha",
+    "url": "https://tamashaweb.com/",
+    "category": "Entertainment"
+  },
+  {
+    "name": "Parakeet Ai",
+    "url": "https://www.parakeet-ai.com/call-assistant?utm_source=sales_performance_max_interview_assistant&gad_source=2&gad_campaignid=21833226879&wbraid=ClkKCAjwm6POBhAYEkkAIHChOiiwlBK33aA1VymJmiS6o6wMxVNV8UWKN-VNuSpJWAVkWiK5Acmystnh4Zpf3vCkU_99p9RxyZfpZDQdIevj-KEHcz-sGgKCnw",
+    "category": "AI"
+  },
+  {
+    "name": "Leonardo.ai",
+    "url": "https://app.leonardo.ai/",
+    "category": "AI"
+  },
+  {
+    "name": "Forage",
+    "url": "https://www.theforage.com/virtual-experience/x52Jy9s26xNbZkTQ7/commonwealth-bank/intro-cybersecurity-rdxl/data-analysis",
+    "category": "Education"
+  },
+  {
+    "name": "Flames Blue",
+    "url": "https://www.flames.blue/",
+    "category": "Other"
+  },
+  {
+    "name": "Simplilearn MS excel Certification",
+    "url": "https://lms.simplilearn.com/dashboard",
+    "category": "Education"
+  },
+  {
+    "name": "Cloud Computing Google Certification",
+    "url": "https://www.skills.google/paths/36/course_templates/153/video/625196",
+    "category": "Education"
+  },
+  {
+    "name": "CM IT INTERNSHIP",
+    "url": "https://cmitinterns.punjab.gov.pk/v1/portal/candidate/candidate-details",
+    "category": "Jobs"
+  },
+  {
+    "name": "SAP Certifications",
+    "url": "https://learning.sap.com/certifications?utm_source=sp_auto_dm&page=1&fbclid=PARlRTSARy2jRleHRuA2FlbQIxMABzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAafCZLhMB4T1tdL-4gxf0Nx0ZGiA7meYbgEyzzn1Vn5yjMHXTRLf_0DyQUfwDg_aem_-CgjmB1ROhYtCfVhuaO9zQ",
+    "category": "Education"
+  },
+  {
+    "name": "Anthropic",
+    "url": "https://anthropic.skilljar.com/introduction-to-model-context-protocol/303756",
+    "category": "AI"
+  },
+  {
+    "name": "SkillsBuild IBM",
+    "url": "https://skills.yourlearning.ibm.com/activity/ALM-COURSE_3825115?planId=PLAN-F926DE21540D&sectionId=SECTION-C&planIdFromParentTab=PLAN-F926DE21540D&sectionIdFromParentTab=SECTION-C&planIdForChildTab=PLAN-F926DE21540D",
+    "category": "Education"
+  },
+  {
+    "name": "CognitiveClassAi",
+    "url": "https://cognitiveclass.ai/learn/data-analyst-career-preparation",
+    "category": "Education"
+  },
+  {
+    "name": "Linkedin Learning",
+    "url": "https://www.linkedin.com/learning/paths/career-essentials-in-generative-ai-by-microsoft-and-linkedin",
+    "category": "Education"
+  },
+  {
+    "name": "BAYT",
+    "url": "https://www.bayt.com/en/myworkspace-j/?utm_medium=affiliate&utm_source=careerjoin.com-1734837",
+    "category": "Jobs"
+  },
+  {
+    "name": "AU",
+    "url": "https://portals.au.edu.pk/Admissions/Home/ApplicationDashboard",
+    "category": "Education"
+  },
+  {
+    "name": "micro1",
+    "url": "https://jobs.micro1.ai/post/success",
+    "category": "Jobs"
+  },
+  {
+    "name": "Google Data Analytics",
+    "url": "https://www.coursera.org/learn/foundations-data/home/module/1",
+    "category": "Education"
+  },
+  {
+    "name": "Dastak",
+    "url": "https://dastak.punjab.gov.pk/",
+    "category": "Jobs"
+  },
+  {
+    "name": "DataCamp Learn",
+    "url": "https://app.datacamp.com/learn/courses",
+    "category": "Education"
+  },
+  {
+    "name": "MindHub",
+    "url": "https://www.trymindhub.com/workspace",
+    "category": "Other"
+  },
+  {
+    "name": "Zidio",
+    "url": "https://zidio.in/dashboard",
+    "category": "Jobs"
+  },
+  {
+    "name": "Mint Technologies",
+    "url": "https://minttechnologies.web.app/intern-tasklist?domain=Data%20Analysis%20using%20Python",
+    "category": "Jobs"
+  },
+  {
+    "name": "Getcert.eu.cc",
+    "url": "https://getcert.eu.cc/certification",
+    "category": "Education"
+  },
+  {
+    "name": "Class Central free certificates",
+    "url": "https://www.classcentral.com/",
+    "category": "Education"
+  }
+]
