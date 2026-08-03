@@ -3,8 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown } from "lucide-react";
-import { CATEGORIES, type Category } from "@/domain/entities/shortcut";
-import { CATEGORY_STYLE, cn } from "@/lib/utils";
+import {
+  CATEGORIES,
+  type Category,
+} from "@/domain/entities/shortcut";
+import {
+  CATEGORY_STYLE,
+  cn,
+} from "@/lib/utils";
 
 interface Props {
   value: Category;
@@ -12,56 +18,132 @@ interface Props {
   label?: string;
 }
 
-export function CategorySelect({ value, onChange, label = "Category" }: Props) {
+export function CategorySelect({
+  value,
+  onChange,
+  label = "Category",
+}: Props) {
   const [open, setOpen] = useState(false);
+
   const rootRef = useRef<HTMLDivElement>(null);
+
   const style = CATEGORY_STYLE[value];
 
   useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    function handleOutsideClick(event: MouseEvent) {
+      if (
+        rootRef.current &&
+        !rootRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
     }
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
     }
-    document.addEventListener("mousedown", onClickOutside);
-    document.addEventListener("keydown", onKeyDown);
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
-      document.removeEventListener("mousedown", onClickOutside);
-      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
+      document.removeEventListener(
+        "keydown",
+        handleEscape
+      );
     };
   }, []);
 
   return (
-    <div ref={rootRef} className="relative flex flex-col gap-1.5">
-      <span className="font-mono text-[11px] uppercase tracking-wide text-ink2">{label}</span>
+    <div
+      ref={rootRef}
+      className="relative flex flex-col gap-2 overflow-visible"
+    >
+      <span className="font-mono text-[11px] uppercase tracking-wide text-ink2">
+        {label}
+      </span>
+
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex items-center justify-between rounded-lg border border-border bg-ink-700 px-3 py-2.5 text-left text-sm text-mist outline-none transition-colors focus:border-amber/60"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex items-center justify-between rounded-lg border border-border bg-ink-700 px-3 py-2.5 text-left text-sm text-mist transition-all duration-200 hover:border-amber/60 focus:border-amber/60 focus:outline-none"
       >
         <span className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: style.accent }} />
+          <span
+            className="h-2.5 w-2.5 rounded-full"
+            style={{
+              backgroundColor: style.accent,
+            }}
+          />
+
           {value}
         </span>
-        <ChevronDown className={cn("h-4 w-4 text-ink2 transition-transform", open && "rotate-180")} />
+
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-ink2 transition-transform duration-200",
+            open && "rotate-180"
+          )}
+        />
       </button>
 
       <AnimatePresence>
         {open && (
           <motion.ul
             role="listbox"
-            initial={{ opacity: 0, y: -6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.98 }}
-            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute left-0 right-0 top-full z-10 mt-1.5 max-h-56 overflow-auto rounded-lg border border-border bg-ink-800 p-1 shadow-2xl"
+            initial={{
+              opacity: 0,
+              y: -8,
+              scale: 0.98,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }}
+            exit={{
+              opacity: 0,
+              y: -6,
+              scale: 0.98,
+            }}
+            transition={{
+              duration: 0.18,
+            }}
+            className="
+              absolute
+              left-0
+              right-0
+              top-full
+              mt-2
+              z-[99999]
+              max-h-80
+              overflow-y-auto
+              rounded-xl
+              border
+              border-border
+              bg-ink-800
+              p-2
+              shadow-2xl
+              ring-1
+              ring-black/30
+              custom-scrollbar
+            "
           >
             {CATEGORIES.map((category) => {
-              const optionStyle = CATEGORY_STYLE[category];
-              const selected = category === value;
+              const optionStyle =
+                CATEGORY_STYLE[category];
+
+              const selected =
+                category === value;
+
               return (
                 <li key={category}>
                   <button
@@ -73,15 +155,27 @@ export function CategorySelect({ value, onChange, label = "Category" }: Props) {
                       setOpen(false);
                     }}
                     className={cn(
-                      "flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-2 text-left font-mono text-xs transition-colors",
-                      selected ? "bg-ink-600 text-mist" : "text-ink2 hover:bg-ink-700 hover:text-mist"
+                      "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-all duration-150",
+                      selected
+                        ? "bg-ink-600 text-mist"
+                        : "text-ink2 hover:bg-ink-700 hover:text-mist"
                     )}
                   >
-                    <span className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: optionStyle.accent }} />
+                    <span className="flex items-center gap-3">
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            optionStyle.accent,
+                        }}
+                      />
+
                       {category}
                     </span>
-                    {selected && <Check className="h-3.5 w-3.5 text-amber" />}
+
+                    {selected && (
+                      <Check className="h-4 w-4 text-amber" />
+                    )}
                   </button>
                 </li>
               );
