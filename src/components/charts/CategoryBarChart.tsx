@@ -2,7 +2,7 @@
 
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
 import type { CategorySlice } from "@/lib/analytics";
-import { CATEGORY_STYLE } from "@/lib/utils";
+import { getCategoryStyle } from "@/lib/utils";
 import { ChartCard } from "./ChartCard";
 import { ChartTooltip } from "./ChartTooltip";
 
@@ -37,7 +37,7 @@ export function CategoryBarChart({ data, index }: Props) {
             <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.03)" }} />
             <Bar dataKey="count" name="Shortcuts" radius={[6, 6, 0, 0]} maxBarSize={38} isAnimationActive animationDuration={700}>
               {data.map((entry) => (
-                <Cell key={entry.category} fill={CATEGORY_STYLE[entry.category].accent} />
+                <Cell key={entry.category} fill={getCategoryStyle(entry.category).accentCATEGORY_STYLE[entry.category].accent} />
               ))}
             </Bar>
           </BarChart>

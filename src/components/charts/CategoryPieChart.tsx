@@ -28,7 +28,7 @@ export function CategoryPieChart({ data, index }: Props) {
               animationDuration={700}
             >
               {data.map((entry) => (
-                <Cell key={entry.category} fill={CATEGORY_STYLE[entry.category].accent} stroke="#0A0F1E" strokeWidth={2} />
+                <Cell key={entry.category} fill={getCategoryStyle(entry.category).accent} stroke="#0A0F1E" strokeWidth={2} />
               ))}
             </Pie>
             <Tooltip content={<ChartTooltip />} />

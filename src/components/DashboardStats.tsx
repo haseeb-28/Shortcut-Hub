@@ -3,7 +3,7 @@
 import { Boxes, Clock3, MousePointerClick, RefreshCw, Tags, TrendingUp, Zap } from "lucide-react";
 import type { ShortcutViewModel } from "@/application/dto/shortcut-dto";
 import { buildAnalytics } from "@/lib/analytics";
-import { CATEGORY_STYLE, timeAgo } from "@/lib/utils";
+import { getCategoryStyle, timeAgo } from "@/lib/utils";
 import { StatCard } from "./StatCard";
 
 interface Props {
@@ -16,8 +16,9 @@ export function DashboardStats({ shortcuts, loading, onAdd }: Props) {
   if (loading) return <StatsSkeleton />;
 
   const stats = buildAnalytics(shortcuts);
-  const mostUsedAccent = stats.mostUsedCategory ? CATEGORY_STYLE[stats.mostUsedCategory.category].accent : "#94A3B8";
-
+  const mostUsedAccent = stats.mostUsedCategory
+  ? getCategoryStyle(stats.mostUsedCategory.category).accent
+  : "#94A3B8";
   return (
     <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
       <StatCard icon={Boxes} label="Total Shortcuts" value={stats.total} index={0} accent="#F2B705" />

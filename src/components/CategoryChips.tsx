@@ -1,16 +1,24 @@
 "use client";
 
-import { CATEGORIES, type Category } from "@/domain/entities/shortcut";
-import { CATEGORY_STYLE, cn } from "@/lib/utils";
+import { getCategoryStyle, cn } from "@/lib/utils";
 
 interface Props {
-  active: Category | "All";
-  onSelect: (category: Category | "All") => void;
+  active: string | "All";
+  onSelect: (category: string | "All") => void;
   counts: Map<string, number>;
   total: number;
 }
 
-export function CategoryChips({ active, onSelect, counts, total }: Props) {
+export function CategoryChips({
+  active,
+  onSelect,
+  counts,
+  total,
+}: Props) {
+  const categories = [...counts.keys()].sort((a, b) =>
+    a.localeCompare(b)
+  );
+
   return (
     <div className="flex flex-wrap gap-2">
       <Chip
@@ -20,14 +28,15 @@ export function CategoryChips({ active, onSelect, counts, total }: Props) {
         onClick={() => onSelect("All")}
         accent="#F2B705"
       />
-      {CATEGORIES.filter((c) => (counts.get(c) ?? 0) > 0).map((category) => (
+
+      {categories.map((category) => (
         <Chip
           key={category}
           label={category}
           count={counts.get(category) ?? 0}
           active={active === category}
           onClick={() => onSelect(category)}
-          accent={CATEGORY_STYLE[category].accent}
+          accent={getCategoryStyle(category).accent}
         />
       ))}
     </div>
@@ -50,7 +59,14 @@ function Chip({
   return (
     <button
       onClick={onClick}
-      style={active ? { borderColor: accent, color: accent } : undefined}
+      style={
+        active
+          ? {
+              borderColor: accent,
+              color: accent,
+            }
+          : undefined
+      }
       className={cn(
         "flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs transition",
         active
@@ -60,10 +76,18 @@ function Chip({
     >
       <span
         className="h-1.5 w-1.5 rounded-full"
-        style={{ backgroundColor: active ? accent : "#3A4870" }}
+        style={{
+          backgroundColor: active
+            ? accent
+            : "#3A4870",
+        }}
       />
+
       {label}
-      <span className="text-[10px] opacity-70">{count}</span>
+
+      <span className="text-[10px] opacity-70">
+        {count}
+      </span>
     </button>
   );
 }

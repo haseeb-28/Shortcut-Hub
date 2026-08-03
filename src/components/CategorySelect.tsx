@@ -2,19 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronDown } from "lucide-react";
 import {
-  CATEGORIES,
-  type Category,
-} from "@/domain/entities/shortcut";
-import {
-  CATEGORY_STYLE,
-  cn,
-} from "@/lib/utils";
+  Check,
+  ChevronDown,
+  Plus,
+} from "lucide-react";
+
+import { cn, getCategoryStyle } from "@/lib/utils";
+import { useCategories } from "@/hooks/useCategories";
 
 interface Props {
-  value: Category;
-  onChange: (category: Category) => void;
+  value: string;
+  onChange: (category: string) => void;
   label?: string;
 }
 
@@ -23,47 +22,80 @@ export function CategorySelect({
   onChange,
   label = "Category",
 }: Props) {
+  const {
+    categories,
+    addCategory,
+  } = useCategories();
+
   const [open, setOpen] = useState(false);
+  const [newCategory, setNewCategory] =
+    useState("");
 
-  const rootRef = useRef<HTMLDivElement>(null);
+  const rootRef =
+    useRef<HTMLDivElement>(null);
 
-  const style = CATEGORY_STYLE[value];
+  const style = getCategoryStyle(value);
 
   useEffect(() => {
-    function handleOutsideClick(event: MouseEvent) {
+    function outside(e: MouseEvent) {
       if (
         rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
+        !rootRef.current.contains(
+          e.target as Node
+        )
       ) {
         setOpen(false);
       }
     }
 
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+    function esc(e: KeyboardEvent) {
+      if (e.key === "Escape") {
         setOpen(false);
       }
     }
 
-    document.addEventListener("mousedown", handleOutsideClick);
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener(
+      "mousedown",
+      outside
+    );
+
+    document.addEventListener(
+      "keydown",
+      esc
+    );
 
     return () => {
       document.removeEventListener(
         "mousedown",
-        handleOutsideClick
+        outside
       );
+
       document.removeEventListener(
         "keydown",
-        handleEscape
+        esc
       );
     };
   }, []);
 
+  async function createCategory() {
+    const trimmed =
+      newCategory.trim();
+
+    if (!trimmed) return;
+
+    await addCategory(trimmed);
+
+    onChange(trimmed);
+
+    setNewCategory("");
+
+    setOpen(false);
+  }
+
   return (
     <div
       ref={rootRef}
-      className="relative flex flex-col gap-2 overflow-visible"
+      className="relative flex flex-col gap-2"
     >
       <span className="font-mono text-[11px] uppercase tracking-wide text-ink2">
         {label}
@@ -71,16 +103,17 @@ export function CategorySelect({
 
       <button
         type="button"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center justify-between rounded-lg border border-border bg-ink-700 px-3 py-2.5 text-left text-sm text-mist transition-all duration-200 hover:border-amber/60 focus:border-amber/60 focus:outline-none"
+        onClick={() =>
+          setOpen(!open)
+        }
+        className="flex items-center justify-between rounded-lg border border-border bg-ink-700 px-3 py-2.5 text-sm text-mist transition focus:border-amber/60"
       >
         <span className="flex items-center gap-2">
           <span
-            className="h-2.5 w-2.5 rounded-full"
+            className="h-2 w-2 rounded-full"
             style={{
-              backgroundColor: style.accent,
+              backgroundColor:
+                style.accent,
             }}
           />
 
@@ -89,98 +122,126 @@ export function CategorySelect({
 
         <ChevronDown
           className={cn(
-            "h-4 w-4 text-ink2 transition-transform duration-200",
-            open && "rotate-180"
+            "h-4 w-4 transition",
+            open &&
+              "rotate-180"
           )}
         />
       </button>
 
       <AnimatePresence>
         {open && (
-          <motion.ul
-            role="listbox"
+          <motion.div
             initial={{
               opacity: 0,
-              y: -8,
-              scale: 0.98,
+              y: -6,
             }}
             animate={{
               opacity: 1,
               y: 0,
-              scale: 1,
             }}
             exit={{
               opacity: 0,
               y: -6,
-              scale: 0.98,
             }}
             transition={{
-              duration: 0.18,
+              duration: 0.15,
             }}
-            className="
-              absolute
-              left-0
-              right-0
-              top-full
-              mt-2
-              z-[99999]
-              max-h-80
-              overflow-y-auto
-              rounded-xl
-              border
-              border-border
-              bg-ink-800
-              p-2
-              shadow-2xl
-              ring-1
-              ring-black/30
-              custom-scrollbar
-            "
+            className="absolute left-0 right-0 top-full z-[9999] mt-2 rounded-xl border border-border bg-ink-800 shadow-2xl"
           >
-            {CATEGORIES.map((category) => {
-              const optionStyle =
-                CATEGORY_STYLE[category];
+            <div className="max-h-64 overflow-y-auto custom-scrollbar p-2">
+              {categories.map(
+                (category) => {
+                  const selected =
+                    category ===
+                    value;
 
-              const selected =
-                category === value;
+                  const optionStyle =
+                    getCategoryStyle(
+                      category
+                    );
 
-              return (
-                <li key={category}>
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    onClick={() => {
-                      onChange(category);
-                      setOpen(false);
-                    }}
-                    className={cn(
-                      "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-all duration-150",
-                      selected
-                        ? "bg-ink-600 text-mist"
-                        : "text-ink2 hover:bg-ink-700 hover:text-mist"
-                    )}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span
-                        className="h-2.5 w-2.5 rounded-full"
-                        style={{
-                          backgroundColor:
-                            optionStyle.accent,
-                        }}
-                      />
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => {
+                        onChange(
+                          category
+                        );
 
-                      {category}
-                    </span>
+                        setOpen(
+                          false
+                        );
+                      }}
+                      className={cn(
+                        "mb-1 flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition",
 
-                    {selected && (
-                      <Check className="h-4 w-4 text-amber" />
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </motion.ul>
+                        selected
+                          ? "bg-ink-600 text-mist"
+                          : "hover:bg-ink-700 text-ink2 hover:text-mist"
+                      )}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span
+                          className="h-2 w-2 rounded-full"
+                          style={{
+                            backgroundColor:
+                              optionStyle.accent,
+                          }}
+                        />
+
+                        {category}
+                      </span>
+
+                      {selected && (
+                        <Check className="h-4 w-4 text-amber" />
+                      )}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+
+            <div className="border-t border-border p-2">
+              <div className="flex gap-2">
+                <input
+                  value={
+                    newCategory
+                  }
+                  onChange={(e) =>
+                    setNewCategory(
+                      e.target.value
+                    )
+                  }
+                  onKeyDown={(
+                    e
+                  ) => {
+                    if (
+                      e.key ===
+                      "Enter"
+                    ) {
+                      e.preventDefault();
+
+                      createCategory();
+                    }
+                  }}
+                  placeholder="New category..."
+                  className="flex-1 rounded-lg border border-border bg-ink-700 px-3 py-2 text-sm text-mist outline-none"
+                />
+
+                <button
+                  type="button"
+                  onClick={
+                    createCategory
+                  }
+                  className="rounded-lg bg-amber px-3 text-ink-900 hover:bg-amber-soft"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
