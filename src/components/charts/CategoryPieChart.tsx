@@ -2,7 +2,7 @@
 
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { CategorySlice } from "@/lib/analytics";
-import { CATEGORY_STYLE } from "@/lib/utils";
+import { CATEGORY_STYLE, getCategoryStyle } from "@/lib/utils";
 import { ChartCard } from "./ChartCard";
 import { ChartTooltip } from "./ChartTooltip";
 

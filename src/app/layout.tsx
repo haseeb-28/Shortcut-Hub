@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+// @ts-ignore: allow side-effect CSS import without type declarations
 import "./globals.css";
 
 import { CategoryProvider } from "@/context/CategoryContext";
