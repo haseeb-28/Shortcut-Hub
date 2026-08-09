@@ -4,25 +4,141 @@
 @tailwind utilities;
 /* stylelint-enable at-rule-no-unknown */
 
+/* =========================================================
+   ROOT / FONTS
+   ========================================================= */
+
 :root {
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+
+  --background: #0a0f1e;
+  --surface: #0f172a;
+  --surface-light: #151f36;
+  --border: #223052;
+
+  --amber: #f2b705;
+  --amber-soft: #f7ce4a;
+
+  --mist: #f8fafc;
+  --muted: #8592ad;
+
+  --teal: #4fd1c5;
+  --purple: #a78bfa;
+  --blue: #60a5fa;
+
+  --glow-amber: rgba(242, 183, 5, 0.16);
+  --glow-blue: rgba(96, 165, 250, 0.12);
+  --glow-purple: rgba(167, 139, 250, 0.1);
 }
+
+/* =========================================================
+   HTML / BODY
+   ========================================================= */
 
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  background: var(--background);
 }
 
 body {
-  background-color: #0a0f1e;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 42px 42px;
+  position: relative;
   min-height: 100vh;
   overflow-x: hidden;
+
+  background-color: var(--background);
+
+  /*
+   * Existing technical grid
+   */
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 42px 42px;
+
+  color: var(--mist);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+ * Ambient lighting behind the application.
+ * This does not interfere with clicks because it has pointer-events: none.
+ */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -2;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(242, 183, 5, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(96, 165, 250, 0.06),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 50% 85%,
+      rgba(167, 139, 250, 0.05),
+      transparent 28%
+    );
+
+  filter: blur(30px);
+  animation: ambient-drift 18s ease-in-out infinite alternate;
+}
+
+/*
+ * Very subtle vignette.
+ */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(3, 7, 18, 0.28) 100%
+    );
+}
+
+/* =========================================================
+   GLOBAL RESET / TEXT RENDERING
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -31,31 +147,308 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid #f2b705;
+  outline: 2px solid var(--amber);
   outline-offset: 2px;
 }
 
-/* Improve text rendering */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  box-sizing: border-box;
+/* =========================================================
+   SMOOTH INTERACTION
+   ========================================================= */
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
+button,
+a {
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
 }
 
-/* ----------------------------------------
-   Default Scrollbar
----------------------------------------- */
+/* =========================================================
+   3D / DEPTH UTILITIES
+   ========================================================= */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.translate-z-1 {
+  transform: translateZ(1px);
+}
+
+.translate-z-10 {
+  transform: translateZ(10px);
+}
+
+.translate-z-20 {
+  transform: translateZ(20px);
+}
+
+.translate-z-30 {
+  transform: translateZ(30px);
+}
+
+/* =========================================================
+   GLASS / DEPTH EFFECTS
+   ========================================================= */
+
+.glass {
+  background: rgba(15, 23, 42, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.glass-strong {
+  background: rgba(10, 15, 30, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.depth-shadow {
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.4),
+    0 8px 20px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.depth-shadow-amber {
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 0 35px rgba(242, 183, 5, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* =========================================================
+   GLOW EFFECTS
+   ========================================================= */
+
+.glow-amber {
+  box-shadow:
+    0 0 0 1px rgba(242, 183, 5, 0.15),
+    0 0 25px rgba(242, 183, 5, 0.12);
+}
+
+.glow-amber-strong {
+  box-shadow:
+    0 0 0 1px rgba(242, 183, 5, 0.25),
+    0 0 30px rgba(242, 183, 5, 0.2),
+    0 0 70px rgba(242, 183, 5, 0.08);
+}
+
+.glow-teal {
+  box-shadow:
+    0 0 0 1px rgba(79, 209, 197, 0.12),
+    0 0 25px rgba(79, 209, 197, 0.1);
+}
+
+/* =========================================================
+   GRADIENT TEXT
+   ========================================================= */
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f7ce4a 45%,
+    #f2b705 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text-cool {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #93c5fd 50%,
+    #a78bfa 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* =========================================================
+   TECH GRID
+   ========================================================= */
+
+.tech-grid {
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 32px 32px;
+}
+
+.tech-grid-soft {
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px
+    );
+
+  background-size: 42px 42px;
+}
+
+/* =========================================================
+   SHIMMER
+   ========================================================= */
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.055) 45%,
+    transparent 70%
+  );
+
+  transform: translateX(-100%);
+  animation: shimmer 3.5s ease-in-out infinite;
+}
+
+/* =========================================================
+   FLOATING ORBS
+   ========================================================= */
+
+.ambient-orb {
+  position: absolute;
+
+  border-radius: 9999px;
+
+  pointer-events: none;
+
+  filter: blur(60px);
+
+  opacity: 0.25;
+
+  animation:
+    orb-float 12s ease-in-out infinite alternate,
+    orb-pulse 7s ease-in-out infinite;
+}
+
+.ambient-orb-amber {
+  background: rgba(242, 183, 5, 0.28);
+}
+
+.ambient-orb-blue {
+  background: rgba(96, 165, 250, 0.2);
+}
+
+.ambient-orb-purple {
+  background: rgba(167, 139, 250, 0.18);
+}
+
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
+
+.card-3d {
+  transform-style: preserve-3d;
+
+  transition:
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+}
+
+.card-3d:hover {
+  transform:
+    translateY(-3px)
+    rotateX(1deg)
+    rotateY(-1deg);
+}
+
+.card-lift:hover {
+  transform: translateY(-3px);
+}
+
+/* =========================================================
+   BUTTON DEPTH
+   ========================================================= */
+
+.button-depth {
+  position: relative;
+
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.22),
+    0 8px 20px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.button-depth:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 0 rgba(0, 0, 0, 0.22),
+    0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+.button-depth:active {
+  transform: translateY(2px);
+
+  box-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.22),
+    0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================================
+   SCROLLBARS
+   ========================================================= */
+
+/* Default Chromium scrollbar */
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -69,6 +462,8 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #223052;
   border-radius: 999px;
+
+  border: 2px solid #0a0f1e;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -82,9 +477,9 @@ body {
   scrollbar-color: #223052 #0a0f1e;
 }
 
-/* ----------------------------------------
-   Custom Scrollbar
----------------------------------------- */
+/* =========================================================
+   CUSTOM SCROLLBAR
+   ========================================================= */
 
 .custom-scrollbar {
   scrollbar-width: thin;
@@ -109,9 +504,9 @@ body {
   background: #f59e0b;
 }
 
-/* ----------------------------------------
-   Utility Classes
----------------------------------------- */
+/* =========================================================
+   HIDDEN SCROLLBAR
+   ========================================================= */
 
 .hide-scrollbar {
   -ms-overflow-style: none;
@@ -121,6 +516,10 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* =========================================================
+   EXISTING SHADOW UTILITIES
+   ========================================================= */
 
 .dropdown-shadow {
   box-shadow:
@@ -132,4 +531,101 @@ body {
   box-shadow:
     0 25px 50px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* =========================================================
+   KEYFRAMES
+   ========================================================= */
+
+@keyframes ambient-drift {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2%, 1%, 0) scale(1.04);
+  }
+
+  100% {
+    transform: translate3d(-1%, 2%, 0) scale(1.02);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  45%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes orb-float {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(18px, -20px, 0);
+  }
+
+  100% {
+    transform: translate3d(-12px, 14px, 0);
+  }
+}
+
+@keyframes orb-pulse {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(1.05);
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .card-3d:hover,
+  .card-lift:hover,
+  .button-depth:hover,
+  .button-depth:active {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   MOBILE PERFORMANCE
+   ========================================================= */
+
+@media (max-width: 640px) {
+  body::before {
+    filter: blur(45px);
+    opacity: 0.7;
+  }
+
+  .card-3d:hover {
+    transform: translateY(-2px);
+  }
 }
