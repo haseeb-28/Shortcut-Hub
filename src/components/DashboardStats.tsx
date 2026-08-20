@@ -93,7 +93,7 @@ export function DashboardStats({
         <StatCard
           icon={Tags}
           label="Categories"
-          value={String(stats.categoryCount)}
+          value={String(stats.categoriesUsed)}
           sublabel="organized groups"
           index={1}
           accent="#34D399"

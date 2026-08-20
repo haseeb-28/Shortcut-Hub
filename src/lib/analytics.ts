@@ -16,17 +16,25 @@ export interface MonthlyPoint {
 }
 
 export interface AnalyticsSummary {
-  categoryCount(categoryCount: any): string | number;
   total: number;
+
+  // Total number of unique categories
+  categoryCount: number;
+
+  // Kept for compatibility with existing Analytics components
   categoriesUsed: number;
+
   mostUsedCategory: {
     category: Category;
     count: number;
   } | null;
+
   available: number;
   missing: number;
+
   mostRecent: ShortcutViewModel | null;
   lastUpdated: ShortcutViewModel | null;
+
   categoryDistribution: CategorySlice[];
   monthlyGrowth: MonthlyPoint[];
 }
@@ -44,6 +52,10 @@ export function buildAnalytics(
 ): AnalyticsSummary {
   const total = shortcuts.length;
 
+  // ------------------------------------------------------------
+  // Category counts
+  // ------------------------------------------------------------
+
   const byCategory = new Map<Category, number>();
 
   for (const shortcut of shortcuts) {
@@ -53,6 +65,10 @@ export function buildAnalytics(
     );
   }
 
+  // ------------------------------------------------------------
+  // Category distribution
+  // ------------------------------------------------------------
+
   const categoryDistribution: CategorySlice[] = Array.from(
     byCategory.entries()
   )
@@ -60,9 +76,15 @@ export function buildAnalytics(
       category,
       count,
       percentage:
-        total > 0 ? Math.round((count / total) * 100) : 0,
+        total > 0
+          ? Math.round((count / total) * 100)
+          : 0,
     }))
     .sort((a, b) => b.count - a.count);
+
+  // ------------------------------------------------------------
+  // Most used category
+  // ------------------------------------------------------------
 
   const mostUsedCategory = categoryDistribution[0]
     ? {
@@ -71,11 +93,19 @@ export function buildAnalytics(
       }
     : null;
 
+  // ------------------------------------------------------------
+  // Availability
+  // ------------------------------------------------------------
+
   const available = shortcuts.filter(
     (shortcut) => shortcut.status === "Available"
   ).length;
 
   const missing = total - available;
+
+  // ------------------------------------------------------------
+  // Recently created
+  // ------------------------------------------------------------
 
   const byCreatedDesc = [...shortcuts].sort(
     (a, b) =>
@@ -83,35 +113,46 @@ export function buildAnalytics(
       new Date(a.created).getTime()
   );
 
+  // ------------------------------------------------------------
+  // Recently updated
+  // ------------------------------------------------------------
+
   const byUpdatedDesc = [...shortcuts].sort(
     (a, b) =>
       new Date(b.updated).getTime() -
       new Date(a.updated).getTime()
   );
 
+  // ------------------------------------------------------------
+  // Final analytics summary
+  // ------------------------------------------------------------
+
   return {
-  total,
-  categoriesUsed: byCategory.size,
-  mostUsedCategory,
-  available,
-  missing,
-  mostRecent: byCreatedDesc[0] ?? null,
-  lastUpdated: byUpdatedDesc[0] ?? null,
-  categoryDistribution,
-  monthlyGrowth: buildMonthlyGrowth(shortcuts),
-  categoryCount(category: Category | string | null): string | number {
-    // If a Category or string is passed, return the count for that
-    // category from the distribution; otherwise return a dash.
-    if (!category) return "-";
+    total,
 
-    const slice = categoryDistribution.find(
-      (s) => s.category === (category as Category)
-    );
+    // Number of unique categories
+    categoryCount: byCategory.size,
 
-    return slice ? slice.count : 0;
-  },
-};
+    // Same value, kept for existing components
+    categoriesUsed: byCategory.size,
+
+    mostUsedCategory,
+
+    available,
+    missing,
+
+    mostRecent: byCreatedDesc[0] ?? null,
+    lastUpdated: byUpdatedDesc[0] ?? null,
+
+    categoryDistribution,
+
+    monthlyGrowth: buildMonthlyGrowth(shortcuts),
+  };
 }
+
+// ------------------------------------------------------------
+// Monthly growth
+// ------------------------------------------------------------
 
 function buildMonthlyGrowth(
   shortcuts: ShortcutViewModel[]
@@ -120,11 +161,16 @@ function buildMonthlyGrowth(
     return [];
   }
 
+  // Sort oldest -> newest
   const sorted = [...shortcuts].sort(
     (a, b) =>
       new Date(a.created).getTime() -
       new Date(b.created).getTime()
   );
+
+  // ------------------------------------------------------------
+  // Count shortcuts added per month
+  // ------------------------------------------------------------
 
   const addedByMonth = new Map<string, number>();
 
@@ -141,9 +187,12 @@ function buildMonthlyGrowth(
     );
   }
 
-  // Fill every month between the first and last entry so that
-  // gaps appear as flat segments in the analytics charts.
+  // ------------------------------------------------------------
+  // Fill missing months
+  // ------------------------------------------------------------
+
   const firstDate = new Date(sorted[0].created);
+
   const lastDate = new Date(
     sorted[sorted.length - 1].created
   );
@@ -161,12 +210,16 @@ function buildMonthlyGrowth(
   );
 
   const points: MonthlyPoint[] = [];
+
   let cumulative = 0;
 
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    year: "numeric",
-  });
+  const formatter = new Intl.DateTimeFormat(
+    "en-US",
+    {
+      month: "short",
+      year: "numeric",
+    }
+  );
 
   while (cursor <= end) {
     const key = `${cursor.getFullYear()}-${String(
