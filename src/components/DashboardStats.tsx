@@ -7,7 +7,6 @@ import {
   RefreshCw,
   Tags,
   TrendingUp,
-  Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -19,13 +18,11 @@ import { StatCard } from "./StatCard";
 interface Props {
   shortcuts: ShortcutViewModel[];
   loading: boolean;
-  onAdd: () => void;
 }
 
 export function DashboardStats({
   shortcuts,
   loading,
-  onAdd,
 }: Props) {
   if (loading) {
     return <StatsSkeleton />;
@@ -37,7 +34,7 @@ export function DashboardStats({
     ? getCategoryStyle(
         stats.mostUsedCategory.category
       ).accent
-    : "#94A3B8";
+    : "var(--category-other)";
 
   return (
     <section className="mb-8">
@@ -87,7 +84,7 @@ export function DashboardStats({
               : "shortcuts saved"
           }
           index={0}
-          accent="#F2B705"
+          accent="var(--amber)"
         />
 
         <StatCard
@@ -96,7 +93,7 @@ export function DashboardStats({
           value={String(stats.categoriesUsed)}
           sublabel="organized groups"
           index={1}
-          accent="#34D399"
+          accent="var(--category-development)"
         />
 
         <StatCard
@@ -127,7 +124,7 @@ export function DashboardStats({
               : undefined
           }
           index={3}
-          accent="#A78BFA"
+          accent="var(--category-ai)"
         />
 
         <StatCard
@@ -142,7 +139,7 @@ export function DashboardStats({
             stats.lastUpdated?.name
           }
           index={4}
-          accent="#60A5FA"
+          accent="var(--category-education)"
         />
 
         <StatCard
@@ -151,73 +148,11 @@ export function DashboardStats({
           value="—"
           sublabel="tracking unavailable"
           index={5}
-          accent="#22D3EE"
+          accent="var(--category-social)"
         />
       </div>
 
-      {/* Quick action */}
-      <QuickActionsCard onAdd={onAdd} />
     </section>
-  );
-}
-
-function QuickActionsCard({
-  onAdd,
-}: {
-  onAdd: () => void;
-}) {
-  return (
-    <motion.button
-      type="button"
-      onClick={onAdd}
-      initial={{
-        opacity: 0,
-        y: 14,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-      transition={{
-        duration: 0.45,
-        delay: 0.25,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      whileHover={{
-        y: -2,
-        scale: 1.005,
-      }}
-      whileTap={{
-        scale: 0.99,
-      }}
-      className="group relative mt-3 flex w-full items-center justify-between overflow-hidden rounded-xl border border-amber/20 bg-ink-700/40 px-4 py-3 text-left backdrop-blur-sm transition-colors duration-300 hover:border-amber/40 hover:bg-ink-700/60"
-    >
-      {/* Ambient glow */}
-      <span
-        className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-amber/10 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
-        aria-hidden="true"
-      />
-
-      <span className="relative flex min-w-0 items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-amber/20 bg-amber/10 text-amber transition-transform duration-300 group-hover:scale-105">
-          <Zap className="h-4 w-4" />
-        </span>
-
-        <span className="min-w-0">
-          <span className="block font-display text-sm font-semibold text-mist">
-            Quick add
-          </span>
-
-          <span className="block truncate font-body text-xs text-ink2">
-            Save a new shortcut in one click
-          </span>
-        </span>
-      </span>
-
-      <span className="relative hidden shrink-0 rounded-md border border-border bg-ink-600/60 px-2 py-1 font-mono text-[10px] text-ink2 sm:block">
-        ⌘K also works
-      </span>
-    </motion.button>
   );
 }
 
@@ -225,11 +160,11 @@ function StatsSkeleton() {
   return (
     <section className="mb-8">
       <div className="mb-5">
-        <div className="h-2.5 w-20 animate-pulse rounded bg-ink-600" />
+        <div         className="neu-inset h-2.5 w-20 animate-pulse rounded" />
 
-        <div className="mt-3 h-8 w-64 animate-pulse rounded-lg bg-ink-700" />
+        <div         className="neu-inset mt-3 h-8 w-64 animate-pulse rounded-lg" />
 
-        <div className="mt-2 h-4 w-48 animate-pulse rounded bg-ink-700" />
+        <div         className="neu-inset mt-2 h-4 w-48 animate-pulse rounded" />
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
@@ -246,12 +181,11 @@ function StatsSkeleton() {
               duration: 0.25,
               delay: index * 0.04,
             }}
-            className="h-[116px] animate-pulse rounded-xl border border-border bg-ink-700/40"
+            className="neu-surface h-[116px] animate-pulse rounded-xl border"
           />
         ))}
       </div>
 
-      <div className="mt-3 h-[62px] animate-pulse rounded-xl border border-border bg-ink-700/40" />
     </section>
   );
 }

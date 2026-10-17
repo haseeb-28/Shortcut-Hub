@@ -10,8 +10,8 @@ interface Props {
 export function EmptyState({ variant, onAdd }: Props) {
   const isFirstRun = variant === "first-run";
   return (
-    <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border py-20 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink-600 text-amber">
+    <div className="neu-surface flex flex-col items-center gap-4 rounded-2xl border border-dashed py-16 text-center sm:py-20">
+      <div className="neu-inset flex h-12 w-12 items-center justify-center rounded-full border text-amber">
         {isFirstRun ? <PlusCircle className="h-6 w-6" /> : <Radar className="h-6 w-6" />}
       </div>
       <div>
@@ -27,7 +27,7 @@ export function EmptyState({ variant, onAdd }: Props) {
       {isFirstRun && (
         <button
           onClick={onAdd}
-          className="rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft"
+          className="neu-button rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-button transition hover:bg-amber-soft"
         >
           Add your first shortcut
         </button>

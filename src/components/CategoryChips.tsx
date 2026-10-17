@@ -22,7 +22,7 @@ export function CategoryChips({
   return (
     <section
       aria-label="Shortcut categories"
-      className="rounded-2xl border border-border bg-ink-800/70 p-4"
+      className="neu-surface rounded-2xl border p-4 sm:p-5"
     >
       {/* Header */}
       <div className="mb-3 flex items-center justify-between gap-3">
@@ -48,7 +48,7 @@ export function CategoryChips({
           count={total}
           active={active === "All"}
           onClick={() => onSelect("All")}
-          accent="#F2B705"
+          accent="var(--amber)"
         />
 
         {categories.map((category) => (
@@ -89,23 +89,24 @@ function Chip({
           ? {
               borderColor: accent,
               color: accent,
-              boxShadow: `0 0 0 1px ${accent}20, 0 4px 18px ${accent}12`,
+              boxShadow:
+                "inset 3px 3px 6px var(--shadow-dark), inset -2px -2px 5px var(--input-highlight)",
             }
           : undefined
       }
       className={cn(
-        "group inline-flex items-center gap-2 rounded-xl border px-3.5 py-2.5 font-mono text-xs transition-all duration-200",
+        "inline-flex items-center gap-2 rounded-xl border px-3.5 py-2.5 font-mono text-xs transition-all duration-200",
         active
-          ? "bg-ink-600"
-          : "border-border bg-ink-700/70 text-ink2 hover:border-ink-500 hover:bg-ink-600 hover:text-mist"
+          ? "neu-inset text-mist"
+          : "neu-button border-border bg-ink-800 text-ink2 hover:border-ink-500 hover:text-mist"
       )}
     >
       {/* Category indicator */}
       <span
         className="h-2 w-2 shrink-0 rounded-full transition-all duration-200"
         style={{
-          backgroundColor: active ? accent : "#3A4870",
-          boxShadow: active ? `0 0 8px ${accent}70` : "none",
+          backgroundColor: active ? accent : "var(--border)",
+          boxShadow: active ? `0 0 8px color-mix(in srgb, ${accent} 44%, transparent)` : "none",
         }}
       />
 

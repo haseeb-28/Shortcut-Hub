@@ -83,7 +83,7 @@ export function ShortcutPreviewModal({
               ease: [0.16, 1, 0.3, 1],
             }}
             onMouseDown={(event) => event.stopPropagation()}
-            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-ink-800 shadow-2xl"
+            className="neu-surface relative w-full max-w-lg overflow-hidden rounded-2xl border"
           >
             {/* Category accent */}
             <div
@@ -180,8 +180,8 @@ export function ShortcutPreviewModal({
                       style={{
                         backgroundColor:
                           shortcut.status === "Available"
-                            ? "rgba(79,209,197,0.12)"
-                            : "rgba(242,85,90,0.12)",
+                            ? "color-mix(in srgb, var(--teal) 12%, transparent)"
+                            : "color-mix(in srgb, var(--danger) 12%, transparent)",
                       }}
                     >
                       {shortcut.status}
@@ -228,8 +228,8 @@ export function ShortcutPreviewModal({
                   value={shortcut.status}
                   accent={
                     shortcut.status === "Available"
-                      ? "#4FD1C5"
-                      : "#F2555A"
+                    ? "var(--teal)"
+                    : "var(--danger)"
                   }
                 />
               </motion.div>
@@ -245,7 +245,7 @@ export function ShortcutPreviewModal({
                   href={shortcut.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-amber px-4 py-3 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-amber px-4 py-3 font-display text-sm font-semibold text-button transition hover:bg-amber-soft"
                 >
                   <ExternalLink className="h-4 w-4" />
                   Open Website

@@ -18,29 +18,29 @@ export function GrowthAreaChart({ data, index }: Props) {
           <AreaChart data={data} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="addedGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#4FD1C5" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#4FD1C5" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--teal)" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="var(--teal)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#223052" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fill: "#8592AD", fontSize: 10, fontFamily: "var(--font-mono)" }}
+              tick={{ fill: "var(--chart-label)", fontSize: 10, fontFamily: "var(--font-mono)" }}
               tickLine={false}
-              axisLine={{ stroke: "#223052" }}
+              axisLine={{ stroke: "var(--chart-grid)" }}
             />
             <YAxis
               allowDecimals={false}
-              tick={{ fill: "#8592AD", fontSize: 10, fontFamily: "var(--font-mono)" }}
+              tick={{ fill: "var(--chart-label)", fontSize: 10, fontFamily: "var(--font-mono)" }}
               tickLine={false}
               axisLine={false}
             />
-            <Tooltip content={<ChartTooltip />} cursor={{ stroke: "#223052" }} />
+            <Tooltip content={<ChartTooltip />} cursor={{ stroke: "var(--chart-grid)" }} />
             <Area
               type="monotone"
               dataKey="added"
               name="Added"
-              stroke="#4FD1C5"
+              stroke="var(--teal)"
               strokeWidth={2.5}
               fill="url(#addedGradient)"
               isAnimationActive

@@ -11,6 +11,7 @@ import {
 
 import { CATEGORIES } from "@/domain/entities/shortcut";
 import { AppwriteCategoryRepository } from "@/infrastructure/appwrite/repositories/category-repository";
+import { authService } from "@/infrastructure/appwrite/auth";
 import type { Category } from "@/domain/entities/category";
 
 interface CategoryContextValue {
@@ -38,6 +39,13 @@ export function CategoryProvider({
 
   const refresh = useCallback(async () => {
     try {
+      const user = await authService.getCurrentUser();
+
+      if (!user) {
+        setCategories([...CATEGORIES]);
+        return;
+      }
+
       const custom =
         await repository.list();
 
@@ -59,7 +67,9 @@ export function CategoryProvider({
   }, []);
 
   useEffect(() => {
-    refresh();
+    void refresh().catch((error: unknown) => {
+      console.error("Failed to load categories:", error);
+    });
   }, [refresh]);
 
   async function addCategory(name: string) {

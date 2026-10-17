@@ -13,6 +13,7 @@ import {
 } from "@/domain/entities/password";
 import { PasswordInput } from "@/components/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
+import { beginNavigation } from "@/lib/navigation";
 
 export default function ResetPasswordPage() {
   return (
@@ -21,10 +22,10 @@ export default function ResetPasswordPage() {
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm rounded-xl border border-border bg-ink-800 p-7 shadow-2xl"
+        className="neu-surface w-full max-w-sm rounded-2xl border p-7"
       >
         <div className="mb-6 flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-amber text-ink-900">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-amber text-button">
             <Radio className="h-4.5 w-4.5" />
           </div>
           <div>
@@ -61,7 +62,10 @@ function ResetPasswordForm() {
 
   useEffect(() => {
     if (!success) return;
-    const timer = setTimeout(() => router.push("/login"), 2500);
+    const timer = setTimeout(() => {
+      beginNavigation();
+      router.push("/login");
+    }, 2500);
     return () => clearTimeout(timer);
   }, [success, router]);
 
@@ -137,7 +141,7 @@ function ResetPasswordForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft disabled:opacity-60"
+          className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-button transition hover:bg-amber-soft disabled:opacity-60"
         >
           {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <KeyRound className="h-4 w-4" />}
           {submitting ? "Updating…" : "Update Password"}
@@ -168,7 +172,7 @@ function InvalidLinkView() {
       </div>
       <Link
         href="/forgot-password"
-        className="mt-2 rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft"
+        className="mt-2 rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-button transition hover:bg-amber-soft"
       >
         Request New Recovery Email
       </Link>

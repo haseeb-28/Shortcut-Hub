@@ -57,7 +57,7 @@ export function ShortcutGrid({
         className="pointer-events-none absolute -inset-x-8 -top-8 -z-10 h-40 opacity-30 blur-3xl"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(242,183,5,0.08), transparent 65%)",
+            "radial-gradient(ellipse at center, var(--glow-amber), transparent 65%)",
         }}
         aria-hidden="true"
       />

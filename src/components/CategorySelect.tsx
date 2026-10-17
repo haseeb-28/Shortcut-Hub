@@ -158,7 +158,7 @@ export function CategorySelect({
         className={cn(
           "group relative flex w-full items-center justify-between overflow-hidden rounded-xl border px-3.5 py-3 text-left transition-all duration-200",
           open
-            ? "border-amber/50 bg-ink-600 shadow-[0_0_0_1px_rgba(242,183,5,0.08),0_8px_30px_rgba(0,0,0,0.2)]"
+            ? "border-amber/50 bg-ink-600 shadow-[0_0_0_1px_var(--glow-amber),0_8px_30px_var(--glow-amber)]"
             : "border-border bg-ink-700 hover:border-ink-500 hover:bg-ink-600"
         )}
         aria-haspopup="listbox"
@@ -246,7 +246,7 @@ export function CategorySelect({
               damping: 28,
               mass: 0.7,
             }}
-            className="absolute left-0 right-0 top-full z-[10000] mt-2 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111a2e]/[0.98] shadow-[0_25px_70px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+            className="absolute left-0 right-0 top-full z-[10000] mt-2 overflow-hidden rounded-2xl border border-border bg-ink-800 shadow-[8px_8px_16px_var(--shadow-dark),-8px_-8px_16px_var(--raised-highlight)] backdrop-blur-xl"
           >
             {/* Top accent */}
             <div
@@ -452,7 +452,7 @@ export function CategorySelect({
                         }
                       : undefined
                   }
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber text-ink-900 shadow-[0_6px_20px_rgba(242,183,5,0.15)] transition hover:bg-amber-soft disabled:pointer-events-none disabled:opacity-40"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber text-button shadow-[0_6px_20px_var(--glow-amber)] transition hover:bg-amber-soft disabled:pointer-events-none disabled:opacity-40"
                   aria-label="Create category"
                 >
                   {creating ? (

@@ -16,27 +16,27 @@ export function GrowthLineChart({ data, index }: Props) {
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#223052" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
             <XAxis
               dataKey="label"
-              tick={{ fill: "#8592AD", fontSize: 10, fontFamily: "var(--font-mono)" }}
+              tick={{ fill: "var(--chart-label)", fontSize: 10, fontFamily: "var(--font-mono)" }}
               tickLine={false}
-              axisLine={{ stroke: "#223052" }}
+              axisLine={{ stroke: "var(--chart-grid)" }}
             />
             <YAxis
               allowDecimals={false}
-              tick={{ fill: "#8592AD", fontSize: 10, fontFamily: "var(--font-mono)" }}
+              tick={{ fill: "var(--chart-label)", fontSize: 10, fontFamily: "var(--font-mono)" }}
               tickLine={false}
               axisLine={false}
             />
-            <Tooltip content={<ChartTooltip />} cursor={{ stroke: "#223052" }} />
+            <Tooltip content={<ChartTooltip />} cursor={{ stroke: "var(--chart-grid)" }} />
             <Line
               type="monotone"
               dataKey="cumulative"
               name="Total shortcuts"
-              stroke="#F2B705"
+              stroke="var(--amber)"
               strokeWidth={2.5}
-              dot={{ fill: "#F2B705", r: 3 }}
+              dot={{ fill: "var(--amber)", r: 3 }}
               activeDot={{ r: 5 }}
               isAnimationActive
               animationDuration={800}

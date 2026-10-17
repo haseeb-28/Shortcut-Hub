@@ -2,46 +2,14 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 
-interface Props {
-  onComplete: () => void;
-}
-
-export function SplashScreen({ onComplete }: Props) {
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setVisible(false);
-
-      const exitTimer = window.setTimeout(() => {
-        onComplete();
-      }, 450);
-
-      return () => window.clearTimeout(exitTimer);
-    }, 2200);
-
-    return () => window.clearTimeout(timer);
-  }, [onComplete]);
-
-  if (!visible) {
-    return (
-      <motion.div
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{ duration: 0.45 }}
-        className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0A0F1E]"
-      />
-    );
-  }
-
+export function SplashScreen() {
   return (
     <motion.div
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#0A0F1E]"
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[var(--background)]"
     >
       {/* ============================================================
           BACKGROUND EFFECTS
@@ -89,45 +57,6 @@ export function SplashScreen({ onComplete }: Props) {
           perspective: 1000,
         }}
       >
-        {/* Rotating outer ring */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            rotateX: -70,
-            rotateZ: -25,
-            scale: 0.4,
-          }}
-          animate={{
-            opacity: 1,
-            rotateX: 0,
-            rotateZ: 0,
-            scale: 1,
-          }}
-          transition={{
-            duration: 1,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="absolute h-36 w-36 rounded-[2rem] border border-amber/20"
-          style={{
-            transformStyle: "preserve-3d",
-            boxShadow:
-              "0 0 60px rgba(242,183,5,0.12), inset 0 0 35px rgba(242,183,5,0.04)",
-          }}
-        />
-
-        {/* Continuous ring rotation */}
-        <motion.div
-          animate={{
-            rotateZ: 360,
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="absolute h-40 w-40 rounded-[2.2rem] border border-dashed border-amber/10"
-        />
-
         {/* 3D logo tile */}
         <motion.div
           initial={{
@@ -147,7 +76,7 @@ export function SplashScreen({ onComplete }: Props) {
             delay: 0.15,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="relative flex h-28 w-28 items-center justify-center rounded-[1.7rem] border border-amber/50 bg-gradient-to-br from-amber via-amber/90 to-orange-500 shadow-[0_25px_80px_rgba(242,183,5,0.25)]"
+          className="relative flex h-28 w-28 items-center justify-center rounded-[1.7rem] border border-amber/50 bg-gradient-to-br from-amber via-amber/90 to-amber-soft shadow-[0_25px_80px_var(--glow-amber)]"
           style={{
             transformStyle: "preserve-3d",
           }}

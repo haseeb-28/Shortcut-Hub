@@ -178,7 +178,7 @@ function PreviewAndConfirm({
           <button
             onClick={onConfirm}
             disabled={actionableCount === 0}
-            className="rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft disabled:opacity-50"
+            className="rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-button transition hover:bg-amber-soft disabled:opacity-50"
           >
             Import
           </button>

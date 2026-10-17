@@ -2,11 +2,13 @@
 
 import { Suspense, useState, FormEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Chrome, Loader2, LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { FloatingInput } from "@/components/FloatingInput";
+import { beginNavigation } from "@/lib/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,6 +28,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
+      beginNavigation();
       router.push("/");
     } catch (err) {
       console.error("Login error:", err);
@@ -42,6 +45,7 @@ export default function LoginPage() {
 
   function handleGoogle() {
     setGoogleLoading(true);
+    beginNavigation();
     loginWithGoogle();
   }
 
@@ -54,12 +58,22 @@ export default function LoginPage() {
           duration: 0.35,
           ease: [0.16, 1, 0.3, 1],
         }}
-        className="w-full max-w-sm rounded-xl border border-border bg-ink-800 p-7 shadow-2xl"
+        className="neu-surface w-full max-w-sm rounded-2xl border p-7"
       >
         <div className="mb-7 text-center">
           <div className="mb-3 flex justify-center">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber text-ink-900">
-              <LogIn className="h-5 w-5" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber text-button">
+              <Image
+                src="/shortcut-hub-logo.png"
+                alt="Shortcut Hub"
+                width={24}
+                height={24}
+                priority
+                className="h-6 w-6 object-contain invert"
+                style={{
+                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.45))",
+                }}
+              />
             </div>
           </div>
 
@@ -121,7 +135,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft disabled:cursor-not-allowed disabled:opacity-60"
+            className="neu-button mt-1 flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-button transition hover:bg-amber-soft disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -145,7 +159,7 @@ export default function LoginPage() {
           type="button"
           onClick={handleGoogle}
           disabled={googleLoading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-ink-700 py-2.5 font-display text-sm font-medium text-mist transition hover:border-ink-500 hover:bg-ink-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="neu-button flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-ink-800 py-2.5 font-display text-sm font-medium text-mist transition hover:border-ink-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {googleLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />

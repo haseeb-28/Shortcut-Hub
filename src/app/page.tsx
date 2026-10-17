@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useCallback,
   useDeferredValue,
   useEffect,
   useMemo,
@@ -9,6 +8,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
 
 import type {
   Category,
@@ -19,11 +19,9 @@ import type { ShortcutViewModel } from "@/application/dto/shortcut-dto";
 import { useAuth } from "@/hooks/useAuth";
 import { useShortcuts } from "@/hooks/useShortcuts";
 
-import { SplashScreen } from "@/components/SplashScreen";
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
 import { DashboardStats } from "@/components/DashboardStats";
-import { CommandBar } from "@/components/CommandBar";
 import { CategoryChips } from "@/components/CategoryChips";
 import { StatsBar } from "@/components/StatsBar";
 import { ShortcutGrid } from "@/components/ShortcutGrid";
@@ -31,11 +29,12 @@ import { AddEditModal } from "@/components/AddEditModal";
 import { ConfirmDeleteModal } from "@/components/ConfirmDeleteModal";
 import { ShortcutPreviewModal } from "@/components/ShortcutPreviewModal";
 import { ToastStack } from "@/components/ToastStack";
+import { beginNavigation } from "@/lib/navigation";
 
 export default function DashboardPage() {
   const router = useRouter();
 
-  const { isAuthed, ready, logout } = useAuth();
+  const { isAuthed, ready } = useAuth();
 
   const {
     shortcuts,
@@ -47,16 +46,6 @@ export default function DashboardPage() {
     removeShortcut,
     categoryCounts,
   } = useShortcuts();
-
-  // ------------------------------------------------------------
-  // Splash screen
-  // ------------------------------------------------------------
-
-  const [showSplash, setShowSplash] = useState(true);
-
-  const handleSplashComplete = useCallback(() => {
-    setShowSplash(false);
-  }, []);
 
   // ------------------------------------------------------------
   // Search
@@ -101,6 +90,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (ready && !isAuthed) {
+      beginNavigation();
       router.replace("/login");
     }
   }, [ready, isAuthed, router]);
@@ -208,23 +198,22 @@ export default function DashboardPage() {
 
   return (
     <>
-      {/* Initial splash screen */}
-      {showSplash && (
-        <SplashScreen onComplete={handleSplashComplete} />
-      )}
-
       <main className="relative z-10 mx-auto max-w-6xl px-5 py-8 sm:px-8">
-        <NavBar onLogout={logout} />
+        <NavBar
+          search={{
+            value: query,
+            onChange: setQuery,
+            total: shortcuts.length,
+            onEnter: openFirstResult,
+          }}
+        />
 
         <motion.div
           initial={{
             opacity: 0,
             y: 8,
           }}
-          animate={{
-            opacity: showSplash ? 0 : 1,
-            y: showSplash ? 8 : 0,
-          }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.45,
             ease: [0.16, 1, 0.3, 1],
@@ -234,19 +223,10 @@ export default function DashboardPage() {
           <DashboardStats
             shortcuts={shortcuts}
             loading={loading}
-            onAdd={openAddModal}
           />
 
-          {/* Search, categories and stats */}
+          {/* Categories and stats */}
           <section className="mb-6 flex flex-col gap-4">
-            <CommandBar
-              value={query}
-              onChange={setQuery}
-              onAdd={openAddModal}
-              total={shortcuts.length}
-              onEnter={openFirstResult}
-            />
-
             <CategoryChips
               active={activeCategory}
               onSelect={setActiveCategory}
@@ -324,6 +304,17 @@ export default function DashboardPage() {
 
         <ToastStack toasts={toasts} />
       </main>
+      <motion.button
+        type="button"
+        onClick={openAddModal}
+        whileHover={{ y: -3, scale: 1.02 }}
+        whileTap={{ scale: 0.96 }}
+        aria-label="Add shortcut"
+        className="neu-button fixed bottom-5 right-5 z-[60] inline-flex items-center gap-2.5 rounded-2xl border border-amber/40 bg-amber px-5 py-3.5 font-display text-sm font-semibold text-button shadow-[7px_7px_16px_var(--shadow-dark),-5px_-5px_14px_var(--raised-highlight)] transition-colors hover:bg-amber-soft focus-visible:outline-none sm:bottom-8 sm:right-8 sm:px-6 sm:py-4"
+      >
+        <Plus className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
+        Add shortcut
+      </motion.button>
     </>
   );
 }
@@ -344,7 +335,7 @@ function LoadingGrid() {
             duration: 0.25,
             delay: index * 0.04,
           }}
-          className="h-40 animate-pulse rounded-xl border border-border bg-ink-700/40"
+          className="neu-surface h-40 animate-pulse rounded-xl border"
         />
       ))}
     </div>

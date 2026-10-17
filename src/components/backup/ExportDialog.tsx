@@ -91,7 +91,7 @@ export function ExportDialog({ open, onClose, onExport, exporting, total }: Prop
                 type="button"
                 onClick={() => onExport(selected)}
                 disabled={exporting}
-                className="flex min-w-[104px] items-center justify-center gap-2 rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft disabled:opacity-70"
+                className="flex min-w-[104px] items-center justify-center gap-2 rounded-lg bg-amber px-4 py-2 font-display text-sm font-semibold text-button transition hover:bg-amber-soft disabled:opacity-70"
               >
                 {exporting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 {exporting ? "Exporting…" : "Export"}

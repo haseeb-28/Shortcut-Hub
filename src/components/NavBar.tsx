@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -8,16 +8,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   BarChart3,
   LayoutGrid,
-  LogOut,
   Menu,
+  Search,
   Settings,
   X,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { CommandBar } from "./CommandBar";
 
 interface Props {
-  onLogout: () => void;
+  search?: {
+    value: string;
+    onChange: (value: string) => void;
+    total: number;
+    onEnter?: () => void;
+  };
 }
 
 const LINKS = [
@@ -38,12 +44,27 @@ const LINKS = [
   },
 ];
 
-export function NavBar({ onLogout }: Props) {
+export function NavBar({ search }: Props) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    if (!search) return;
+
+    function handleSearchShortcut(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+
+    window.addEventListener("keydown", handleSearchShortcut);
+    return () => window.removeEventListener("keydown", handleSearchShortcut);
+  }, [search]);
 
   return (
-    <header className="relative z-50 mb-8">
+    <header className="neu-surface relative z-50 mb-8 rounded-2xl border p-3">
       <div className="flex items-center justify-between gap-4">
         {/* Brand Link */}
         <Link
@@ -93,14 +114,14 @@ export function NavBar({ onLogout }: Props) {
 
             {/* Main 3D Logo Tile */}
             <div
-              className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-amber/50 bg-gradient-to-br from-amber via-amber/90 to-orange-500 shadow-[0_10px_25px_rgba(242,183,5,0.25)]"
+              className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-amber/50 bg-gradient-to-br from-amber via-amber/90 to-amber-soft shadow-[0_10px_25px_var(--glow-amber)]"
               style={{
                 transformStyle: "preserve-3d",
               }}
             >
               {/* Back depth layer */}
               <div
-                className="pointer-events-none absolute inset-0 rounded-2xl bg-orange-700/70"
+                className="pointer-events-none absolute inset-0 rounded-2xl bg-ink-800/60"
                 style={{
                   transform: "translateZ(-4px) translate(2px, 3px)",
                 }}
@@ -171,7 +192,7 @@ export function NavBar({ onLogout }: Props) {
         {/* Desktop Navigation */}
         <nav
           aria-label="Main navigation"
-          className="hidden items-center gap-1 rounded-xl border border-border bg-ink-700/50 p-1 backdrop-blur-md sm:flex"
+          className="neu-inset hidden items-center gap-1 rounded-xl border p-1 sm:flex"
         >
           {LINKS.map((link) => {
             const active = pathname === link.href;
@@ -185,14 +206,14 @@ export function NavBar({ onLogout }: Props) {
                   "relative flex items-center gap-1.5 rounded-lg px-3 py-2",
                   "font-mono text-xs transition-colors duration-200",
                   active
-                    ? "text-ink-900"
+                    ? "text-button"
                     : "text-ink2 hover:text-mist"
                 )}
               >
                 {active && (
                   <motion.span
                     layoutId="nav-active-pill"
-                    className="absolute inset-0 rounded-lg bg-amber shadow-[0_0_18px_rgba(242,183,5,0.12)]"
+                    className="absolute inset-0 rounded-lg bg-amber shadow-[0_0_18px_var(--glow-amber)]"
                     transition={{
                       type: "spring",
                       stiffness: 400,
@@ -213,21 +234,18 @@ export function NavBar({ onLogout }: Props) {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
-          {/* Desktop Sign Out */}
-          <motion.button
-            whileHover={{
-              y: -1,
-            }}
-            whileTap={{
-              scale: 0.96,
-            }}
-            type="button"
-            onClick={onLogout}
-            className="hidden items-center gap-1.5 rounded-lg border border-border px-3 py-2 font-mono text-xs text-ink2 transition-colors duration-200 hover:border-danger/40 hover:bg-danger/10 hover:text-danger sm:flex"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Sign out
-          </motion.button>
+          {search && (
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              type="button"
+              onClick={() => setSearchOpen((open) => !open)}
+              aria-label={searchOpen ? "Close search" : "Open search"}
+              aria-expanded={searchOpen}
+              className="neu-button flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-ink-800 text-ink2 transition-colors hover:border-amber/50 hover:text-mist"
+            >
+              {searchOpen ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
+            </motion.button>
+          )}
 
           {/* Mobile Menu Toggle */}
           <motion.button
@@ -238,7 +256,7 @@ export function NavBar({ onLogout }: Props) {
             onClick={() => setMobileOpen((open) => !open)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-ink-700/50 text-ink2 backdrop-blur-md transition-colors hover:border-ink-500 hover:text-mist sm:hidden"
+            className="neu-button flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-ink-800 text-ink2 transition-colors hover:border-ink-500 hover:text-mist sm:hidden"
           >
             <AnimatePresence mode="wait" initial={false}>
               {mobileOpen ? (
@@ -289,6 +307,26 @@ export function NavBar({ onLogout }: Props) {
         </div>
       </div>
 
+      <AnimatePresence>
+        {search && searchOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ duration: 0.18 }}
+            className="neu-surface absolute right-3 top-[calc(100%+0.75rem)] z-50 w-[min(34rem,calc(100vw-2rem))] rounded-2xl border p-3"
+          >
+            <CommandBar
+              value={search.value}
+              onChange={search.onChange}
+              onClose={() => setSearchOpen(false)}
+              total={search.total}
+              onEnter={search.onEnter}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mobile Navigation Panel */}
       <AnimatePresence>
         {mobileOpen && (
@@ -313,7 +351,7 @@ export function NavBar({ onLogout }: Props) {
               ease: [0.16, 1, 0.3, 1],
             }}
             aria-label="Mobile navigation"
-            className="mt-3 overflow-hidden rounded-xl border border-border bg-ink-700/70 p-1 backdrop-blur-xl sm:hidden"
+            className="neu-surface mt-3 overflow-hidden rounded-xl border p-1 sm:hidden"
           >
             {LINKS.map((link, index) => {
               const active = pathname === link.href;
@@ -341,7 +379,7 @@ export function NavBar({ onLogout }: Props) {
                       "flex items-center gap-2 rounded-lg px-3 py-2.5",
                       "font-mono text-xs transition-colors",
                       active
-                        ? "bg-amber text-ink-900"
+                        ? "bg-amber text-button"
                         : "text-ink2 hover:bg-ink-600 hover:text-mist"
                     )}
                   >
@@ -352,28 +390,6 @@ export function NavBar({ onLogout }: Props) {
               );
             })}
 
-            <motion.button
-              initial={{
-                opacity: 0,
-                x: -10,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-              }}
-              transition={{
-                delay: LINKS.length * 0.04,
-              }}
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                onLogout();
-              }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 font-mono text-xs text-ink2 transition-colors hover:bg-danger/10 hover:text-danger"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              Sign out
-            </motion.button>
           </motion.nav>
         )}
       </AnimatePresence>

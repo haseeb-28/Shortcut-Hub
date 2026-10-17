@@ -6,24 +6,25 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          DEFAULT: "#0A0F1E",
-          900: "#0A0F1E",
-          800: "#0F1526",
-          700: "#121A2E",
-          600: "#17213A",
-          500: "#1D2A47",
+          DEFAULT: "var(--background)",
+          900: "var(--background)",
+          800: "var(--surface)",
+          700: "var(--surface-light)",
+          600: "var(--surface-raised)",
+          500: "var(--border)",
         },
-        border: "#223052",
+        border: "var(--border)",
+        button: "var(--button-text)",
         amber: {
-          DEFAULT: "#F2B705",
-          soft: "#F7CE4A",
+          DEFAULT: "var(--amber)",
+          soft: "var(--amber-soft)",
         },
         teal: {
-          DEFAULT: "#4FD1C5",
+          DEFAULT: "var(--teal)",
         },
-        ink2: "#8592AD",
-        mist: "#E8ECF4",
-        danger: "#F2555A",
+        ink2: "var(--muted)",
+        mist: "var(--mist)",
+        danger: "var(--danger)",
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],
@@ -31,8 +32,8 @@ const config: Config = {
         mono: ["var(--font-mono)", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(242,183,5,0.15), 0 8px 24px -8px rgba(242,183,5,0.25)",
-        card: "0 1px 0 0 rgba(255,255,255,0.03) inset, 0 8px 20px -12px rgba(0,0,0,0.6)",
+        glow: "0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent), 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent)",
+        card: "8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--raised-highlight)",
       },
       backgroundImage: {
         "runway-grid":
@@ -48,8 +49,10 @@ const config: Config = {
           "50%, 100%": { opacity: "0" },
         },
         beacon: {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(242,183,5,0.5)" },
-          "50%": { boxShadow: "0 0 0 6px rgba(242,183,5,0)" },
+          "0%, 100%": {
+            boxShadow: "0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent)",
+          },
+          "50%": { boxShadow: "0 0 0 6px transparent" },
         },
       },
     },

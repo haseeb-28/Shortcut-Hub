@@ -31,20 +31,22 @@ export function DropZone({ onFile, disabled }: Props) {
       onDragLeave={() => setIsDragging(false)}
       onDrop={disabled ? undefined : handleDrop}
       onClick={() => !disabled && inputRef.current?.click()}
-      animate={{
-        borderColor: isDragging ? "#F2B705" : "#223052",
-        backgroundColor: isDragging ? "rgba(242,183,5,0.06)" : "rgba(23,33,58,0.3)",
-        scale: isDragging ? 1.01 : 1,
-      }}
+      animate={{ scale: isDragging ? 1.01 : 1 }}
       transition={{ duration: 0.15 }}
-      className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed p-10 text-center transition-opacity"
+      className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed p-10 text-center transition-[border-color,background-color,opacity] duration-150"
       role="button"
       tabIndex={0}
       aria-label="Upload a backup file"
       onKeyDown={(e) => {
         if ((e.key === "Enter" || e.key === " ") && !disabled) inputRef.current?.click();
       }}
-      style={disabled ? { opacity: 0.5, pointerEvents: "none" } : undefined}
+      style={{
+        borderColor: isDragging ? "var(--amber)" : "var(--border)",
+        backgroundColor: isDragging
+          ? "color-mix(in srgb, var(--amber) 6%, transparent)"
+          : "color-mix(in srgb, var(--surface) 30%, transparent)",
+        ...(disabled ? { opacity: 0.5, pointerEvents: "none" as const } : {}),
+      }}
     >
       <motion.div
         animate={{ y: isDragging ? -3 : 0 }}

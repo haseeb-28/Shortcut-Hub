@@ -3,7 +3,13 @@
 import { motion } from "framer-motion";
 import { passwordStrength } from "@/domain/entities/password";
 
-const SEGMENT_COLORS = ["#F2555A", "#F2555A", "#F2B705", "#4FD1C5", "#4FD1C5"];
+const SEGMENT_COLORS = [
+  "var(--danger)",
+  "var(--danger)",
+  "var(--amber)",
+  "var(--teal)",
+  "var(--teal)",
+];
 
 export function PasswordStrengthMeter({ password }: { password: string }) {
   if (!password) return null;
@@ -24,7 +30,7 @@ export function PasswordStrengthMeter({ password }: { password: string }) {
           </div>
         ))}
       </div>
-      <p className="font-mono text-[10px] text-ink2" style={{ color: score >= 3 ? "#4FD1C5" : undefined }}>
+      <p className="font-mono text-[10px] text-ink2" style={{ color: score >= 3 ? "var(--teal)" : undefined }}>
         {label}
       </p>
     </div>

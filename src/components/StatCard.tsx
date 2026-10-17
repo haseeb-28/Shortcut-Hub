@@ -14,7 +14,7 @@ interface Props {
   isPlaceholder?: boolean;
 }
 
-export function StatCard({ icon: Icon, label, value, sublabel, accent = "#F2B705", index = 0, isPlaceholder }: Props) {
+export function StatCard({ icon: Icon, label, value, sublabel, accent = "var(--amber)", index = 0, isPlaceholder }: Props) {
   const isNumeric = typeof value === "number";
 
   return (
@@ -23,7 +23,7 @@ export function StatCard({ icon: Icon, label, value, sublabel, accent = "#F2B705
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.3), ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -3 }}
-      className="group relative overflow-hidden rounded-xl border border-border bg-gradient-to-b from-ink-700/70 to-ink-700/30 p-4 shadow-card backdrop-blur-sm transition-colors hover:border-ink-500"
+      className="group neu-surface relative overflow-hidden rounded-2xl border p-4 backdrop-blur-sm transition-colors hover:border-ink-500"
     >
       {/* subtle radial glow that appears on hover — glassmorphism accent, not a full redesign */}
       <div
@@ -43,7 +43,10 @@ export function StatCard({ icon: Icon, label, value, sublabel, accent = "#F2B705
         </div>
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-          style={{ backgroundColor: `${accent}1F`, color: accent }}
+          style={{
+            backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
+            color: accent,
+          }}
         >
           <Icon className="h-4.5 w-4.5" strokeWidth={2} />
         </div>

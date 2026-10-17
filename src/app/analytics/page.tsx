@@ -16,6 +16,7 @@ import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
 import { StatCard } from "@/components/StatCard";
 import { ToastStack } from "@/components/ToastStack";
+import { beginNavigation } from "@/lib/navigation";
 
 const CategoryBarChart = dynamic(
   () =>
@@ -64,7 +65,7 @@ const GrowthAreaChart = dynamic(
 export default function AnalyticsPage() {
   const router = useRouter();
 
-  const { isAuthed, ready, logout } = useAuth();
+  const { isAuthed, ready } = useAuth();
 
   const {
     shortcuts,
@@ -75,6 +76,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     if (ready && !isAuthed) {
+      beginNavigation();
       router.replace("/login");
     }
   }, [ready, isAuthed, router]);
@@ -90,11 +92,11 @@ export default function AnalyticsPage() {
     ? getCategoryStyle(
         analytics.mostUsedCategory.category
       ).accent
-    : "#94A3B8";
+    : "var(--category-other)";
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-      <NavBar onLogout={logout} />
+      <NavBar />
 
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -118,7 +120,7 @@ export default function AnalyticsPage() {
         )}
 
         {!loading && shortcuts.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border py-20 text-center">
+          <div className="neu-surface flex flex-col items-center gap-2 rounded-2xl border border-dashed py-20 text-center">
             <p className="font-display text-base font-semibold text-mist">
               Nothing to analyze yet
             </p>
@@ -136,7 +138,7 @@ export default function AnalyticsPage() {
                 label="Total Shortcuts"
                 value={analytics.total}
                 index={0}
-                accent="#F2B705"
+                accent="var(--amber)"
               />
 
               <StatCard
@@ -144,7 +146,7 @@ export default function AnalyticsPage() {
                 label="Categories Used"
                 value={analytics.categoriesUsed}
                 index={1}
-                accent="#4FD1C5"
+                accent="var(--teal)"
               />
 
               <StatCard
@@ -197,6 +199,6 @@ export default function AnalyticsPage() {
 
 function ChartSkeleton() {
   return (
-    <div className="h-[21.5rem] animate-pulse rounded-xl border border-border bg-ink-700/40" />
+    <div className="neu-surface h-[21.5rem] animate-pulse rounded-2xl border" />
   );
 }

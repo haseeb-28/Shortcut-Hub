@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Loader2, Radio, Send } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Loader2, Send } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { isValidEmail } from "@/domain/entities/password";
 import { FloatingInput } from "@/components/FloatingInput";
@@ -42,11 +43,21 @@ export default function ForgotPasswordPage() {
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm rounded-xl border border-border bg-ink-800 p-7 shadow-2xl"
+        className="neu-surface w-full max-w-sm rounded-2xl border p-7"
       >
         <div className="mb-6 flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-amber text-ink-900">
-            <Radio className="h-4.5 w-4.5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-amber text-button">
+            <Image
+              src="/shortcut-hub-logo.png"
+              alt="Shortcut Hub"
+              width={24}
+              height={24}
+              priority
+              className="h-6 w-6 object-contain invert"
+              style={{
+                filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.45))",
+              }}
+            />
           </div>
           <div>
             <p className="font-display text-sm font-semibold text-mist">Shortcut Hub</p>
@@ -102,7 +113,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft disabled:opacity-60"
+                className="neu-button flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-button transition hover:bg-amber-soft disabled:opacity-60"
               >
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 {submitting ? "Sending…" : "Send Reset Link"}

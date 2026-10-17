@@ -47,19 +47,19 @@ export function CategoryBarChart({
           >
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="#223052"
+              stroke="var(--chart-grid)"
               vertical={false}
             />
 
             <XAxis
               dataKey="category"
               tick={{
-                fill: "#8592AD",
+                fill: "var(--chart-label)",
                 fontSize: 10,
                 fontFamily: "var(--font-mono)",
               }}
               tickLine={false}
-              axisLine={{ stroke: "#223052" }}
+              axisLine={{ stroke: "var(--chart-grid)" }}
               interval={0}
               angle={-25}
               textAnchor="end"
@@ -69,7 +69,7 @@ export function CategoryBarChart({
             <YAxis
               allowDecimals={false}
               tick={{
-                fill: "#8592AD",
+                fill: "var(--chart-label)",
                 fontSize: 10,
                 fontFamily: "var(--font-mono)",
               }}
@@ -80,7 +80,7 @@ export function CategoryBarChart({
             <Tooltip
               content={<ChartTooltip />}
               cursor={{
-                fill: "rgba(255,255,255,0.03)",
+                fill: "var(--chart-cursor)",
               }}
             />
 

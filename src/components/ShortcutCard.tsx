@@ -139,15 +139,12 @@ export function ShortcutCard({
         className={cn(
           "relative flex min-h-[158px] flex-col gap-3",
           "overflow-hidden rounded-2xl",
-          "border border-border",
-          "bg-ink-700/50",
+          "neu-surface border",
           "p-4",
           "backdrop-blur-sm",
           "transition-colors duration-300",
           "focus-within:border-amber/50",
-          isHovered
-            ? "border-ink-500 bg-ink-700/75"
-            : "bg-ink-700/50"
+          isHovered ? "border-ink-500" : ""
         )}
       >
         {/* Category glow */}
@@ -308,8 +305,8 @@ export function ShortcutCard({
             style={{
               backgroundColor:
                 shortcut.status === "Available"
-                  ? "rgba(79,209,197,0.12)"
-                  : "rgba(242,85,90,0.12)",
+                  ? "color-mix(in srgb, var(--teal) 12%, transparent)"
+                  : "color-mix(in srgb, var(--danger) 12%, transparent)",
             }}
           >
             {shortcut.status}
@@ -336,7 +333,7 @@ export function ShortcutCard({
           </motion.span>
 
           {/* Actions */}
-          <div className="flex items-center gap-1">
+          <div className="shortcut-card-actions flex items-center gap-1">
             {/* Edit */}
             <motion.button
               whileHover={{
@@ -391,7 +388,7 @@ export function ShortcutCard({
               onClick={(event) => {
                 event.stopPropagation();
               }}
-              className="rounded-md bg-ink-600 p-1.5 text-mist transition-colors hover:bg-amber hover:text-ink-900"
+              className="rounded-md bg-ink-600 p-1.5 text-mist transition-colors hover:bg-amber hover:text-button"
             >
               <ExternalLink className="h-3.5 w-3.5" />
             </motion.a>

@@ -49,7 +49,7 @@ export function CategoryPieChart({
                 <Cell
                   key={entry.category}
                   fill={getCategoryStyle(entry.category).accent}
-                  stroke="#0A0F1E"
+                  stroke="var(--chart-outline)"
                   strokeWidth={2}
                 />
               ))}
@@ -63,10 +63,10 @@ export function CategoryPieChart({
               wrapperStyle={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "10px",
-                color: "#8592AD",
+                color: "var(--chart-label)",
               }}
               formatter={(value: string) => (
-                <span style={{ color: "#8592AD" }}>
+                <span style={{ color: "var(--chart-label)" }}>
                   {value}
                 </span>
               )}

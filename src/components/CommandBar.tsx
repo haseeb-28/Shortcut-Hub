@@ -1,32 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Plus, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 interface Props {
   value: string;
   onChange: (value: string) => void;
-  onAdd: () => void;
+  onClose: () => void;
   total: number;
   /** Called on Enter — page.tsx wires this to open the first visible result. */
   onEnter?: () => void;
 }
 
-export function CommandBar({ value, onChange, onAdd, total, onEnter }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
-      if (isCmdK) {
-        e.preventDefault();
-        inputRef.current?.focus();
-        inputRef.current?.select();
-      }
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+export function CommandBar({ value, onChange, onClose, total, onEnter }: Props) {
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Escape") {
@@ -34,7 +19,7 @@ export function CommandBar({ value, onChange, onAdd, total, onEnter }: Props) {
         e.preventDefault();
         onChange("");
       } else {
-        inputRef.current?.blur();
+        onClose();
       }
     } else if (e.key === "Enter" && value.trim()) {
       onEnter?.();
@@ -42,20 +27,20 @@ export function CommandBar({ value, onChange, onAdd, total, onEnter }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div>
       <div className="group relative flex-1">
         <Search
           className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink2"
           strokeWidth={2}
         />
         <input
-          ref={inputRef}
+          autoFocus
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={`Search ${total} shortcuts by name or category…`}
           aria-label="Search shortcuts"
-          className="w-full rounded-lg border border-border bg-ink-700/70 py-3 pl-11 pr-16 font-mono text-sm text-mist placeholder:text-ink2/70 outline-none transition focus:border-amber/60 focus:shadow-glow"
+          className="neu-inset w-full rounded-xl border py-3 pl-11 pr-16 font-mono text-sm text-mist placeholder:text-ink2/90 outline-none transition focus:border-amber/70 focus:shadow-glow"
         />
         {value ? (
           <button
@@ -72,13 +57,6 @@ export function CommandBar({ value, onChange, onAdd, total, onEnter }: Props) {
           </kbd>
         )}
       </div>
-      <button
-        onClick={onAdd}
-        className="flex items-center justify-center gap-2 rounded-lg bg-amber px-5 py-3 font-display text-sm font-semibold text-ink-900 transition hover:bg-amber-soft active:scale-[0.98]"
-      >
-        <Plus className="h-4 w-4" strokeWidth={2.5} />
-        Add shortcut
-      </button>
     </div>
   );
 }

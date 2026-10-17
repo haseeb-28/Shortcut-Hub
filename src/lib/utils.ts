@@ -19,63 +19,63 @@ export interface CategoryStyle {
  */
 export const CATEGORY_STYLE: Record<string, CategoryStyle> = {
   AI: {
-    accent: "#A78BFA",
-    bg: "rgba(167,139,250,0.12)",
-    text: "#C4B5FD",
+    accent: "var(--category-ai)",
+    bg: "color-mix(in srgb, var(--category-ai) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Jobs: {
-    accent: "#4FD1C5",
-    bg: "rgba(79,209,197,0.12)",
-    text: "#5EEAD4",
+    accent: "var(--category-jobs)",
+    bg: "color-mix(in srgb, var(--category-jobs) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Education: {
-    accent: "#60A5FA",
-    bg: "rgba(96,165,250,0.12)",
-    text: "#93C5FD",
+    accent: "var(--category-education)",
+    bg: "color-mix(in srgb, var(--category-education) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Development: {
-    accent: "#34D399",
-    bg: "rgba(52,211,153,0.12)",
-    text: "#6EE7B7",
+    accent: "var(--category-development)",
+    bg: "color-mix(in srgb, var(--category-development) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Career: {
-    accent: "#F2B705",
-    bg: "rgba(242,183,5,0.12)",
-    text: "#F7CE4A",
+    accent: "var(--category-career)",
+    bg: "color-mix(in srgb, var(--category-career) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Entertainment: {
-    accent: "#F472B6",
-    bg: "rgba(244,114,182,0.12)",
-    text: "#F9A8D4",
+    accent: "var(--category-entertainment)",
+    bg: "color-mix(in srgb, var(--category-entertainment) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Email: {
-    accent: "#FB7185",
-    bg: "rgba(251,113,133,0.12)",
-    text: "#FDA4AF",
+    accent: "var(--category-email)",
+    bg: "color-mix(in srgb, var(--category-email) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   "Social Media": {
-    accent: "#22D3EE",
-    bg: "rgba(34,211,238,0.12)",
-    text: "#67E8F9",
+    accent: "var(--category-social)",
+    bg: "color-mix(in srgb, var(--category-social) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Freelancing: {
-    accent: "#FB923C",
-    bg: "rgba(251,146,60,0.12)",
-    text: "#FDBA74",
+    accent: "var(--category-freelancing)",
+    bg: "color-mix(in srgb, var(--category-freelancing) 12%, transparent)",
+    text: "var(--category-text)",
   },
 
   Other: {
-    accent: "#94A3B8",
-    bg: "rgba(148,163,184,0.12)",
-    text: "#CBD5E1",
+    accent: "var(--category-other)",
+    bg: "color-mix(in srgb, var(--category-other) 12%, transparent)",
+    text: "var(--category-text)",
   },
 };
 

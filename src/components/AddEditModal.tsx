@@ -181,7 +181,7 @@ export function AddEditModal({
               onClose();
             }
           }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-[#050914]/80 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-[var(--overlay)] p-4 backdrop-blur-md"
         >
           {/* Ambient glow */}
           <motion.div
@@ -229,7 +229,7 @@ export function AddEditModal({
               mass: 0.8,
             }}
             onMouseDown={(event) => event.stopPropagation()}
-            className="relative w-full max-w-lg overflow-visible rounded-2xl border border-white/[0.08] bg-[#10182b]/95 shadow-[0_30px_100px_rgba(0,0,0,0.65)] backdrop-blur-xl"
+            className="neu-surface relative w-full max-w-lg overflow-visible rounded-2xl border backdrop-blur-xl"
             style={{
               transformStyle: "preserve-3d",
             }}
@@ -254,7 +254,7 @@ export function AddEditModal({
                   exit={{
                     opacity: 0,
                   }}
-                  className="absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl bg-[#10182b]/98 backdrop-blur-xl"
+                  className="neu-surface absolute inset-0 z-50 flex flex-col items-center justify-center rounded-2xl backdrop-blur-xl"
                 >
                   <motion.div
                     initial={{
@@ -573,7 +573,7 @@ export function AddEditModal({
                         }
                       : undefined
                   }
-                  className="relative flex min-w-[145px] items-center justify-center gap-2 overflow-hidden rounded-xl bg-amber px-5 py-2.5 font-display text-sm font-semibold text-ink-900 shadow-[0_8px_30px_rgba(242,183,5,0.15)] transition-all duration-200 hover:bg-amber-soft hover:shadow-[0_10px_35px_rgba(242,183,5,0.22)] disabled:pointer-events-none disabled:opacity-60"
+                  className="relative flex min-w-[145px] items-center justify-center gap-2 overflow-hidden rounded-xl bg-amber px-5 py-2.5 font-display text-sm font-semibold text-button shadow-[0_8px_30px_var(--glow-amber)] transition-all duration-200 hover:bg-amber-soft hover:shadow-[0_10px_35px_var(--glow-amber)] disabled:pointer-events-none disabled:opacity-60"
                 >
                   {!submitting && (
                     <motion.span

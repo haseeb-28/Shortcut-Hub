@@ -26,7 +26,7 @@ export function ConfirmDeleteModal({ target, onCancel, onConfirm }: Props) {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-xl border border-border bg-ink-800 p-6 text-center shadow-2xl"
+            className="neu-surface w-full max-w-sm rounded-2xl border p-6 text-center"
           >
             <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-danger/15 text-danger">
               <AlertTriangle className="h-5 w-5" />
@@ -44,7 +44,7 @@ export function ConfirmDeleteModal({ target, onCancel, onConfirm }: Props) {
               </button>
               <button
                 onClick={onConfirm}
-                className="rounded-lg bg-danger px-4 py-2 font-display text-sm font-semibold text-white transition hover:bg-danger/90"
+                className="neu-button rounded-lg bg-danger px-4 py-2 font-display text-sm font-semibold text-button transition hover:bg-danger/90"
               >
                 Remove
               </button>

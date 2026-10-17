@@ -99,9 +99,9 @@ function StatusBadge({
     ValidatedImportRow["status"],
     string
   > = {
-    valid: "rgba(79,209,197,0.12)",
-    duplicate: "rgba(242,183,5,0.12)",
-    invalid: "rgba(242,85,90,0.12)",
+    valid: "color-mix(in srgb, var(--teal) 12%, transparent)",
+    duplicate: "color-mix(in srgb, var(--amber) 12%, transparent)",
+    invalid: "color-mix(in srgb, var(--danger) 12%, transparent)",
   };
 
   return (
