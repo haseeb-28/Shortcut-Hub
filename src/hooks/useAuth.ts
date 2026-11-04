@@ -25,6 +25,14 @@ export function useAuth() {
     []
   );
 
+  const register = useCallback(
+    async (email: string, password: string, name: string) => {
+      const registered = await authService.registerWithEmail(email, password, name);
+      setUser(registered);
+    },
+    []
+  );
+
   /** Redirects the browser away — there is nothing to await here on success. */
   const loginWithGoogle = useCallback(() => {
     authService.loginWithGoogle("/");
@@ -54,6 +62,7 @@ export function useAuth() {
     user,
     ready,
     login,
+    register,
     loginWithGoogle,
     logout,
     requestPasswordRecovery,
