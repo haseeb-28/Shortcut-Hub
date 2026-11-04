@@ -65,7 +65,7 @@ const GrowthAreaChart = dynamic(
 export default function AnalyticsPage() {
   const router = useRouter();
 
-  const { isAuthed, ready } = useAuth();
+  const { isAuthed, ready, user } = useAuth();
 
   const {
     shortcuts,
@@ -77,9 +77,9 @@ export default function AnalyticsPage() {
   useEffect(() => {
     if (ready && !isAuthed) {
       beginNavigation();
-      router.replace("/login");
+      router.replace(user ? "/verification-pending" : "/login");
     }
-  }, [ready, isAuthed, router]);
+  }, [ready, isAuthed, user, router]);
 
   const analytics = useMemo(
     () => buildAnalytics(shortcuts),

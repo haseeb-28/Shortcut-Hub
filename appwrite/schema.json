@@ -8,9 +8,7 @@
   "collection": {
     "name": "shortcuts",
     "documentSecurity": true,
-    "collectionPermissions": [
-      "create(\"users\")"
-    ],
+    "collectionPermissions": [],
     "attributes": [
       { "key": "name", "type": "string", "size": 100, "required": true },
       { "key": "url", "type": "url", "required": true },

@@ -17,6 +17,11 @@ import { FloatingInput } from "@/components/FloatingInput";
 import { PasswordInput } from "@/components/PasswordInput";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { beginNavigation } from "@/lib/navigation";
+import {
+  getRegistrationErrorMessage,
+  RegistrationError,
+  type RegistrationFailureStage,
+} from "@/infrastructure/appwrite/auth";
 
 type FieldErrors = {
   name?: string;
@@ -27,7 +32,7 @@ type FieldErrors = {
 
 export default function SignupPage() {
   const router = useRouter();
-  const { register } = useAuth();
+  const { register, logout } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,11 +40,18 @@ export default function SignupPage() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [registrationStage, setRegistrationStage] =
+    useState<RegistrationFailureStage | null>(null);
+  const [sessionConflict, setSessionConflict] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setFieldErrors({});
     setError(null);
+    setRegistrationStage(null);
+    setSessionConflict(false);
 
     const errors: FieldErrors = {};
     if (!name.trim()) errors.name = "Name is required.";
@@ -76,18 +88,50 @@ export default function SignupPage() {
 
     setSubmitting(true);
     try {
-      await register(email, password, name);
+      const emailSent = await register(email, password, name);
       beginNavigation();
-      router.push("/");
-    } catch (submitError) {
-      console.error("Sign-up error:", submitError);
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "Unable to create your account. Please try again."
+      router.push(`/verification-pending?emailSent=${emailSent ? "1" : "0"}`);
+    } catch (registrationError) {
+      setSessionConflict(
+        (registrationError instanceof RegistrationError &&
+          registrationError.stage === "active-session") ||
+          (registrationError instanceof RegistrationError &&
+            registrationError.appwriteError?.type === "user_session_already_exists")
       );
+      if (registrationError instanceof RegistrationError) {
+        setAccountCreated(registrationError.accountCreated);
+        setRegistrationStage(registrationError.stage);
+        if (process.env.NODE_ENV === "development") {
+          console.error("Appwrite sign-up operation failed", {
+            stage: registrationError.stage,
+            type: registrationError.appwriteError?.type,
+            code: registrationError.appwriteError?.code,
+            message: registrationError.appwriteError?.message,
+          });
+        }
+        setError(getRegistrationErrorMessage(registrationError));
+      } else {
+        setError("Unable to create your account. Please try again.");
+      }
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      await logout();
+      setSessionConflict(false);
+      if (accountCreated) {
+        setRegistrationStage("session");
+      } else {
+        setError(null);
+      }
+    } catch {
+      setError("Unable to sign out of the current session. Please try again.");
+    } finally {
+      setSigningOut(false);
     }
   }
 
@@ -184,16 +228,47 @@ export default function SignupPage() {
           {error && (
             <div role="alert" className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2">
               <p className="font-mono text-xs leading-relaxed text-danger">{error}</p>
+              {accountCreated && (
+                registrationStage === "verification" ? (
+                  <Link
+                    href="/verification-pending?emailSent=0"
+                    className="mt-2 inline-block font-mono text-xs text-amber transition hover:text-amber-soft"
+                  >
+                    Continue to verification options
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="mt-2 inline-block font-mono text-xs text-amber transition hover:text-amber-soft"
+                  >
+                    Sign in to your existing account
+                  </Link>
+                )
+              )}
+              {sessionConflict && (
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className="mt-2 block font-mono text-xs text-amber transition hover:text-amber-soft disabled:opacity-60"
+                >
+                  {signingOut ? "Signing out…" : "Sign out of the current session"}
+                </button>
+              )}
             </div>
           )}
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || accountCreated}
             className="neu-button mt-1 flex items-center justify-center gap-2 rounded-lg bg-amber py-2.5 font-display text-sm font-semibold text-button transition hover:bg-amber-soft disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
-            {submitting ? "Creating account…" : "Create account"}
+            {submitting
+              ? "Creating account…"
+              : accountCreated
+                ? "Account created"
+                : "Create account"}
           </button>
         </form>
 

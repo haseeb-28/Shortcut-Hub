@@ -5,6 +5,7 @@ import type { ShortcutViewModel } from "@/application/dto/shortcut-dto";
 import type { NewShortcut, ShortcutUpdate } from "@/domain/entities/shortcut";
 import { deriveStatus } from "@/domain/entities/shortcut";
 import { container } from "@/infrastructure/di/container";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Toast {
   id: number;
@@ -13,6 +14,7 @@ interface Toast {
 }
 
 export function useShortcuts() {
+  const { isAuthed, ready } = useAuth();
   const [shortcuts, setShortcuts] = useState<ShortcutViewModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,12 @@ export function useShortcuts() {
   }, []);
 
   const refresh = useCallback(async () => {
+    if (!ready || !isAuthed) {
+      setShortcuts([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -35,10 +43,10 @@ export function useShortcuts() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthed, ready]);
 
   useEffect(() => {
-    refresh();
+    if (ready) refresh();
   }, [refresh]);
 
   const addShortcut = useCallback(

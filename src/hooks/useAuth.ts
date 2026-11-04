@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { authService, type AuthUser } from "@/infrastructure/appwrite/auth";
+import {
+  authService,
+  registrationError,
+  type AuthUser,
+  VerificationSessionError,
+} from "@/infrastructure/appwrite/auth";
 
 export function useAuth() {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -21,6 +26,7 @@ export function useAuth() {
     async (email: string, password: string) => {
       const loggedIn = await authService.loginWithEmail(email, password);
       setUser(loggedIn);
+      return loggedIn;
     },
     []
   );
@@ -29,6 +35,19 @@ export function useAuth() {
     async (email: string, password: string, name: string) => {
       const registered = await authService.registerWithEmail(email, password, name);
       setUser(registered);
+      try {
+        await authService.sendEmailVerification(
+          `${window.location.origin}/verify-email`
+        );
+        return true;
+      } catch (error) {
+        throw registrationError(
+          error instanceof VerificationSessionError
+            ? "verification-session"
+            : "verification",
+          error
+        );
+      }
     },
     []
   );
@@ -57,8 +76,23 @@ export function useAuth() {
     []
   );
 
+  const verifyEmail = useCallback(async (userId: string, secret: string) => {
+    await authService.verifyEmail(userId, secret);
+    await refreshSession();
+  }, [refreshSession]);
+
+  const resendEmailVerification = useCallback(async () => {
+    const redirectUrl = `${window.location.origin}/verify-email`;
+    await authService.sendEmailVerification(redirectUrl);
+  }, []);
+
+  const getVerificationResendCooldownSeconds = useCallback(
+    () => authService.getVerificationResendCooldownSeconds(),
+    []
+  );
+
   return {
-    isAuthed: !!user,
+    isAuthed: !!user?.emailVerified,
     user,
     ready,
     login,
@@ -67,5 +101,8 @@ export function useAuth() {
     logout,
     requestPasswordRecovery,
     confirmPasswordRecovery,
+    verifyEmail,
+    resendEmailVerification,
+    getVerificationResendCooldownSeconds,
   };
 }

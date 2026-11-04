@@ -34,7 +34,7 @@ import { beginNavigation } from "@/lib/navigation";
 export default function DashboardPage() {
   const router = useRouter();
 
-  const { isAuthed, ready } = useAuth();
+  const { isAuthed, ready, user } = useAuth();
 
   const {
     shortcuts,
@@ -91,9 +91,9 @@ export default function DashboardPage() {
   useEffect(() => {
     if (ready && !isAuthed) {
       beginNavigation();
-      router.replace("/login");
+      router.replace(user ? "/verification-pending" : "/login");
     }
-  }, [ready, isAuthed, router]);
+  }, [ready, isAuthed, user, router]);
 
   // ------------------------------------------------------------
   // Filter shortcuts

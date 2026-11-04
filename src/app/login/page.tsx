@@ -7,16 +7,26 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Chrome, Loader2, LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  getAppwriteErrorDetails,
+  isEmailVerificationRequiredError,
+} from "@/infrastructure/appwrite/auth";
 import { FloatingInput } from "@/components/FloatingInput";
+import { ResendVerificationEmail } from "@/components/ResendVerificationEmail";
 import { beginNavigation } from "@/lib/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, logout, user: currentUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [verificationRequired, setVerificationRequired] = useState(false);
+  const [verificationBlocked, setVerificationBlocked] = useState(false);
+  const [canResendVerification, setCanResendVerification] = useState(false);
+  const [sessionConflict, setSessionConflict] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -24,22 +34,64 @@ export default function LoginPage() {
     e.preventDefault();
 
     setError(null);
+    setVerificationRequired(false);
+    setVerificationBlocked(false);
+    setCanResendVerification(false);
+    setSessionConflict(false);
     setSubmitting(true);
 
     try {
-      await login(email, password);
+      const user = await login(email, password);
+      if (!user.emailVerified) {
+        setVerificationRequired(true);
+        setCanResendVerification(true);
+        return;
+      }
       beginNavigation();
       router.push("/");
-    } catch (err) {
-      console.error("Login error:", err);
-
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Unable to sign in. Please try again.");
+    } catch (loginError) {
+      const errorDetails = getAppwriteErrorDetails(loginError);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Appwrite email sign-in failed", {
+          type: errorDetails.type,
+          code: errorDetails.code,
+          message: errorDetails.message,
+        });
       }
+
+      if (errorDetails.type === "user_session_already_exists") {
+        setSessionConflict(true);
+        setError(null);
+        return;
+      }
+
+      if (isEmailVerificationRequiredError(loginError)) {
+        setVerificationRequired(true);
+        setVerificationBlocked(true);
+        setCanResendVerification(
+          currentUser !== null &&
+            !currentUser.emailVerified &&
+            currentUser.email.toLowerCase() === email.trim().toLowerCase()
+        );
+        return;
+      }
+
+      setError("Unable to sign in. Check your email and password, then try again.");
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    setError(null);
+    try {
+      await logout();
+      setSessionConflict(false);
+    } catch {
+      setError("Unable to sign out of the current session. Please try again.");
+    } finally {
+      setSigningOut(false);
     }
   }
 
@@ -129,6 +181,41 @@ export default function LoginPage() {
               <p className="font-mono text-xs leading-relaxed text-danger">
                 {error}
               </p>
+            </div>
+          )}
+
+          {verificationRequired && (
+            <div className="flex flex-col items-center gap-3 rounded-lg border border-amber/30 bg-amber/10 px-3 py-3 text-center">
+              <p role="status" className="font-mono text-xs leading-relaxed text-amber">
+                {verificationBlocked
+                  ? "This account hasn’t verified its email. Appwrite blocked sign-in before a session could be created. The project must allow unverified users to sign in before a verification email can be requested."
+                  : "This account hasn’t verified its email yet. Verify your address before accessing Shortcut Hub."}
+              </p>
+              {canResendVerification && <ResendVerificationEmail />}
+              <Link
+                href="/verification-pending"
+                className="font-mono text-[11px] text-ink2 transition hover:text-amber"
+              >
+                View verification instructions
+              </Link>
+            </div>
+          )}
+
+          {sessionConflict && (
+            <div className="flex flex-col items-center gap-3 rounded-lg border border-amber/30 bg-amber/10 px-3 py-3 text-center">
+              <p role="status" className="font-mono text-xs leading-relaxed text-amber">
+                Appwrite reports that a session is already active in this browser. Sign out
+                explicitly before signing into a different account. Your current session has
+                not been changed.
+              </p>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="rounded-lg border border-border bg-ink-800 px-4 py-2 font-display text-sm font-medium text-mist transition hover:border-amber/50 disabled:opacity-60"
+              >
+                {signingOut ? "Signing out…" : "Sign out current session"}
+              </button>
             </div>
           )}
 

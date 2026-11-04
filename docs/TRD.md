@@ -14,10 +14,10 @@
 | Styling | Tailwind CSS | Fast, consistent design-token driven styling |
 | Motion | Framer Motion | Declarative, physics-based micro-interactions |
 | Icons | lucide-react | Lightweight, consistent icon set |
-| Backend / DB | **Appwrite Cloud** | Managed auth, database, and permissions with no server to run yourself — the app talks to `cloud.appwrite.io`, nothing self-hosted |
+| Backend / DB | **Appwrite Cloud + Next.js API routes** | Appwrite stores auth/data; verified Next.js routes on Vercel authorize database requests |
 | Frontend hosting | Vercel | Requested target; ideal for Next.js |
-| Backend hosting | Appwrite Cloud (managed) | No separate backend host to provision — this is the main simplification versus the previous PocketBase setup |
-| Client ↔ Backend | `appwrite` JS SDK (web) | Typed database/account access, session-based auth, permission-aware queries |
+| Backend hosting | Vercel + Appwrite Cloud | Next.js hosts the access-control API; Appwrite remains the managed auth/database service |
+| Client ↔ Backend | `appwrite` JS SDK (auth) + Next.js API | User JWTs are checked server-side; database API keys never reach the browser |
 
 ## 2. Why Appwrite Cloud (and Why This Needed No Vercel Workaround)
 
@@ -84,35 +84,24 @@ auth API). Every use case, every component, and the entire `domain/` layer were 
 | `owner` | string(36) | required; set to the creator's user ID on create |
 | `$createdAt` / `$updatedAt` | datetime (auto) | Appwrite defaults |
 
-**Permissions (row-level security, enforced by Appwrite, not the client):**
-
-Document Security is enabled on the collection. Every document is created with:
-
-```
-Permission.read(Role.user(userId))
-Permission.update(Role.user(userId))
-Permission.delete(Role.user(userId))
-```
-
-so a user can only ever see or modify their own documents — this is the same guarantee the
-PocketBase rule `owner = @request.auth.id` gave, expressed through Appwrite's permission model
-instead of a rule string. The `owner` attribute is kept alongside those permissions so the
-repository can also filter list queries with `Query.equal('owner', userId)`, giving
-defense-in-depth rather than relying on permissions alone.
+**Access control:** Collection-level permissions and per-document user permissions are empty.
+The Next.js API verifies the caller's Appwrite JWT and email verification status, then scopes
+database reads by `owner` and checks ownership before updating/deleting documents. Direct
+browser access is denied by Appwrite permissions.
 
 `status` (Available / Missing) remains **derived at render time** from whether `url` is
 non-empty — never stored, so it can't drift out of sync (unchanged from v1).
 
 Full schema reference: `appwrite/schema.json`. Seed data (44 real shortcuts): `appwrite/seed-data.json`.
 
-## 5. API Surface (via the Appwrite SDK, wrapped by the repository)
+## 5. API Surface (via verified Next.js routes)
 
 | Use case | Appwrite call |
 |---|---|
-| List shortcuts | `databases.listDocuments(dbId, collectionId, [Query.equal('owner', userId), ...])` |
-| Create shortcut | `databases.createDocument(dbId, collectionId, ID.unique(), data, permissions)` |
-| Update shortcut | `databases.updateDocument(dbId, collectionId, id, data)` |
-| Delete shortcut | `databases.deleteDocument(dbId, collectionId, id)` |
+| List shortcuts | `GET /api/shortcuts` (verified user, owner-filtered) |
+| Create shortcut | `POST /api/shortcuts` (server assigns owner) |
+| Update shortcut | `PATCH /api/shortcuts/:id` (server verifies ownership) |
+| Delete shortcut | `DELETE /api/shortcuts/:id` (server verifies ownership) |
 | Login | `account.createEmailPasswordSession(email, password)` |
 | Current user | `account.get()` |
 | Logout | `account.deleteSession('current')` |
@@ -125,7 +114,7 @@ holds the working list + optimistic updates (add/delete update UI immediately, r
 error) so the UI never blocks on network round-trips.
 
 ```
-UI event → hook → usecase → repository (interface) → AppwriteShortcutRepository → Appwrite SDK → Appwrite Cloud API
+UI event → hook → usecase → repository → Next.js verified API route → Appwrite database API
 ```
 
 ## 7. Environment Variables
@@ -135,19 +124,19 @@ NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
 NEXT_PUBLIC_APPWRITE_PROJECT_ID=
 NEXT_PUBLIC_APPWRITE_DATABASE_ID=
 NEXT_PUBLIC_APPWRITE_SHORTCUTS_COLLECTION_ID=
+NEXT_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID=
+APPWRITE_API_KEY=
 ```
 
-All four are safe to expose client-side — Appwrite's web SDK is designed for browser use, and
-data access is governed by the permissions in §4, not by a secret key. (The optional bulk-seed
-script in `appwrite/seed-import.mjs` additionally needs a server-only `APPWRITE_API_KEY`, which
-must never be prefixed `NEXT_PUBLIC_` or committed.)
+Only the `NEXT_PUBLIC_*` values are public. `APPWRITE_API_KEY` is a server-only secret used by
+the verified API routes and must never be prefixed `NEXT_PUBLIC_` or committed.
 
 ## 8. Deployment Steps (summary — full step-by-step in README.md)
 
 1. **Backend:** create an Appwrite Cloud project, database, and `shortcuts` collection through
    the console (README §4–§8), matching `appwrite/schema.json`.
-2. **Frontend:** push repo to GitHub → import into Vercel → set the four `NEXT_PUBLIC_APPWRITE_*`
-   env vars → deploy. Root directory for the Vercel project is the repo root.
+2. **Frontend/API:** push repo to GitHub → import into Vercel → set the `NEXT_PUBLIC_APPWRITE_*`
+   env vars and server-only `APPWRITE_API_KEY` → deploy. Root directory is the repo root.
 
 ## 9. Non-Functional Requirements
 

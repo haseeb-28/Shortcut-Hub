@@ -41,7 +41,7 @@ export function CategoryProvider({
     try {
       const user = await authService.getCurrentUser();
 
-      if (!user) {
+      if (!user?.emailVerified) {
         setCategories([...CATEGORIES]);
         return;
       }

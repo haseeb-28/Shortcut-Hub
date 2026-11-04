@@ -20,7 +20,7 @@ import { beginNavigation } from "@/lib/navigation";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { isAuthed, ready, logout } = useAuth();
+  const { isAuthed, ready, logout, user } = useAuth();
   const { theme, setTheme } = useTheme();
   const { shortcuts, refresh } = useShortcuts();
   const { toasts, pushToast } = useToastQueue();
@@ -42,9 +42,9 @@ export default function SettingsPage() {
   useEffect(() => {
     if (ready && !isAuthed) {
       beginNavigation();
-      router.replace("/login");
+      router.replace(user ? "/verification-pending" : "/login");
     }
-  }, [ready, isAuthed, router]);
+  }, [ready, isAuthed, user, router]);
 
   // Read once on mount — window/localStorage aren't available during SSR.
   useEffect(() => {
